@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/joho/godotenv"
-	"gitlab.com/hydra/forum-api/api/seeds"
+	"gitlab.com/hydra/forum-api/api"
 )
 
 func main() {
@@ -14,8 +14,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting env, %v", err)
 	} else {
-		seeds.SeedData()
-		// api.Run()
+		// if err := seeds.SeedData(); err != nil {
+		// 	log.Fatalf("Seeding data encountered error, %v", err)
+		// }
+		api.Run()
 	}
 
 	// http.HandleFunc("/", hello)

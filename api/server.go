@@ -20,16 +20,22 @@ func ConnectDB() (*gorm.DB, error) {
 }
 
 func MigrateModels(db *gorm.DB) error {
-	var err error
-	err = db.AutoMigrate(&models.User{})
-	err = db.AutoMigrate(&models.Thread{})
-	err = db.AutoMigrate(&models.Post{})
-	return err
+	if err := db.AutoMigrate(&models.User{}); err != nil {
+		return err
+	}
+
+	if err := db.AutoMigrate(&models.Thread{}); err != nil {
+		return err
+	}
+
+	if err := db.AutoMigrate(&models.Post{}); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func Run() {
-	var err error
-
 	db, err := ConnectDB()
 
 	if err != nil {
@@ -40,9 +46,8 @@ func Run() {
 
 	if db != nil {
 		fmt.Println("db loaded")
-		err = MigrateModels(db)
-		if err != nil {
-			log.Fatalf("Error migrating model, %v", err)
+		if err := MigrateModels(db); err != nil {
+			log.Fatalf("Error model migration occured, %v", err)
 		} else {
 			fmt.Println("Model migrated")
 		}
