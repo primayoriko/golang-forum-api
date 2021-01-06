@@ -4,18 +4,19 @@ import (
 	"fmt"
 	"log"
 
-	"gitlab.com/hydra/forum-api/api"
+	"gitlab.com/hydra/forum-api/api/database"
+	"gitlab.com/hydra/forum-api/api/migrations"
 )
 
 func SeedData() error {
-	db, err := api.ConnectDB()
+	db, err := database.ConnectDB()
 	if err != nil {
 		return err
 	}
 
 	if db != nil {
 		fmt.Println("db loaded")
-		if err := api.MigrateModels(db); err != nil {
+		if err := migrations.MigrateModels(db); err != nil {
 			log.Fatalf("Error model migration occured, %v", err)
 		} else {
 			fmt.Println("Model migrated")
