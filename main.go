@@ -1,15 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
+
+	"gitlab.com/hydra/forum-api/api"
 )
 
 func main() {
-	http.HandleFunc("/", hello)
-	fmt.Println("Server started")
-	log.Fatal(http.ListenAndServe(":8008", nil))
+	api.Run()
+	// http.HandleFunc("/", hello)
+	// fmt.Println("Server started")
+	// log.Fatal(http.ListenAndServe(":8008", nil))
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {

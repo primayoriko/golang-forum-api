@@ -1,0 +1,18 @@
+package: gitlab.com/hydra/forum-api
+import:
+- package: github.com/asaskevich/govalidator
+- package: github.com/labstack/echo
+- package: gopkg.in/mcuadros/go-defaults.v1
+- package: github.com/dgrijalva/jwt-go
+- package: github.com/bxcodec/faker/v3
+- package: github.com/go-errors/errors
+- package: github.com/go-pg/pg
+- package: github.com/gorilla/mux v1.8.0
+- package: github.com/jarcoal/httpmock v1.0.6
+- package: github.com/jinzhu/gorm
+- package: github.com/joho/godotenv
+- package: github.com/stretchr/testify
+- package: github.com/twinj/uuid
+- package: golang.org/x/crypto
+- package: gopkg.in/go-playground/assert.v1
+- package: mellium.im/sasl
