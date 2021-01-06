@@ -1,13 +1,23 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	"gitlab.com/hydra/forum-api/api"
+	"github.com/joho/godotenv"
+	"gitlab.com/hydra/forum-api/api/seeds"
 )
 
 func main() {
-	api.Run()
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatalf("Error getting env, %v", err)
+	} else {
+		seeds.SeedData()
+		// api.Run()
+	}
+
 	// http.HandleFunc("/", hello)
 	// fmt.Println("Server started")
 	// log.Fatal(http.ListenAndServe(":8008", nil))

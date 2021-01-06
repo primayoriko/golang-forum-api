@@ -3,9 +3,10 @@ package api
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/gorilla/mux"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,13 +29,6 @@ func MigrateModels(db *gorm.DB) error {
 
 func Run() {
 	var err error
-	err = godotenv.Load()
-
-	if err != nil {
-		log.Fatalf("Error getting env, %v", err)
-	} else {
-		fmt.Println("Got the values")
-	}
 
 	db, err := ConnectDB()
 
@@ -53,4 +47,9 @@ func Run() {
 			fmt.Println("Model migrated")
 		}
 	}
+
+	r := mux.NewRouter()
+
+	// http.Handle("/", r)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("API_PORT")), r))
 }
