@@ -63,7 +63,16 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&cred); err != nil {
 		utils.JsonResponseWriter(&w, http.StatusBadRequest, nil, nil)
+		return
 	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		return
+	}
+
+	// isTruePass := utils.CheckPasswordHash(cred.Password, )
 }
 
 // ChangeUserData is for change it's own user data

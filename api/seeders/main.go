@@ -7,12 +7,13 @@ import (
 	"gitlab.com/hydra/forum-api/api/migrations"
 )
 
+// SeedData is function to seed all tables data to database
 func SeedData() error {
 	if err := migrations.MigrateModels(); err != nil {
 		return err
-	} else {
-		fmt.Println("Models migrated")
 	}
+
+	fmt.Println("Models migrated")
 
 	db, err := database.ConnectDB()
 	if err != nil {
@@ -21,21 +22,21 @@ func SeedData() error {
 
 	if err := SeedUsers(db); err != nil {
 		return err
-	} else {
-		fmt.Println("User data created")
 	}
+
+	fmt.Println("User data created")
 
 	if err := SeedThreads(db); err != nil {
 		return err
-	} else {
-		fmt.Println("Thread data created")
 	}
+
+	fmt.Println("Thread data created")
 
 	if err := SeedPosts(db); err != nil {
 		return err
-	} else {
-		fmt.Println("Post data created")
 	}
+
+	fmt.Println("Post data created")
 
 	return nil
 }
