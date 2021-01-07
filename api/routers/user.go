@@ -9,7 +9,7 @@ import (
 func AddUserRoutes(router *mux.Router) error {
 	var route *mux.Route
 
-	route = router.HandleFunc("/users/register", controllers.Register).Methods("POST")
+	route = router.Handle("/users/register", controllers.Register).Methods("POST")
 
 	if route == nil {
 

@@ -16,3 +16,10 @@ import:
 - package: mellium.im/sasl
 - package: gorm.io/gorm
 - package: gorm.io/driver/postgres
+- package: github.com/cpuguy83/go-md2man/v2
+- package: github.com/gorilla/context
+- package: github.com/iancoleman/orderedmap
+- package: github.com/jarcoal/httpmock
+- package: github.com/mikunalpha/goas
+- package: github.com/russross/blackfriday/v2
+
