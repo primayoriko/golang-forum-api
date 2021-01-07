@@ -10,14 +10,14 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-// Credential is data used for login
-type Credential struct {
+// Credentials is data used for login
+type Credentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-// Claim is login result as an auth token
-type Claim struct {
+// Claims is login result as an auth token
+type Claims struct {
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
@@ -59,9 +59,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 // SignIn is method for get token for creds/auth
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var cred Credential
+	var creds Credentials
+	var user models.User
 
-	if err := json.NewDecoder(r.Body).Decode(&cred); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
 		utils.JsonResponseWriter(&w, http.StatusBadRequest, nil, nil)
 		return
 	}
@@ -72,7 +73,35 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// isTruePass := utils.CheckPasswordHash(cred.Password, )
+	if tx := db.Where("username = ?", creds.Username).First(&user); tx.Error != nil {
+		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		return
+	}
+
+	isTruePass := utils.CheckPasswordHash(creds.Password, user.Password)
+	if !isTruePass {
+		utils.JsonResponseWriter(&w, http.StatusUnauthorized,
+			map[string]interface{}{
+				"message": "wrong password/username"}, nil)
+		return
+	}
+
+	claims := &Claims{
+		Username:       creds.Username,
+		StandardClaims: jwt.StandardClaims{},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString("")
+	if err != nil {
+		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		return
+	}
+
+	utils.JsonResponseWriter(&w, http.StatusOK,
+		map[string]interface{}{
+			"token": tokenString}, nil)
+	return
 }
 
 // ChangeUserData is for change it's own user data

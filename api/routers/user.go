@@ -12,7 +12,7 @@ func AddUserRoutes(router *mux.Router) error {
 	var route *mux.Route
 
 	router.HandleFunc("/register", controllers.Register)
-	// router.HandleFunc("/login", controllers.Login)
+	router.HandleFunc("/signin", controllers.SignIn)
 
 	// userRouters := router.PathPrefix("/users").Subrouter()
 	// userRouters.use()
