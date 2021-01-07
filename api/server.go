@@ -7,54 +7,23 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/api/migrations"
+	"gitlab.com/hydra/forum-api/api/routers"
 )
 
-// func ConnectDB() (*gorm.DB, error) {
-// 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
-// 		os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
-
-// 	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
-// }
-
-// func MigrateModels(db *gorm.DB) error {
-// 	if err := db.AutoMigrate(&models.User{}); err != nil {
-// 		return err
-// 	}
-
-// 	if err := db.AutoMigrate(&models.Thread{}); err != nil {
-// 		return err
-// 	}
-
-// 	if err := db.AutoMigrate(&models.Post{}); err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
 func Run() {
-	db, err := database.ConnectDB()
-
-	if err != nil {
-		log.Fatalf("Error connecting to db, %v", err)
-	} else {
-		fmt.Println("Connected to db")
-	}
-
-	if db != nil {
-		fmt.Println("db loaded")
-		if err := migrations.MigrateModels(db); err != nil {
-			log.Fatalf("Error model migration occured, %v", err)
-		} else {
-			fmt.Println("Model migrated")
-		}
-	}
+	// if err := migrations.MigrateModels(); err != nil {
+	// 	log.Fatalf("Error model migration occured, %v", err)
+	// } else {
+	// 	fmt.Println("Models migrated")
+	// }
 
 	r := mux.NewRouter()
+
+	routers.AddUserRoutes(r)
+	routers.AddThreadRoutes(r)
+	routers.AddPostRoutes(r)
 	// http.Handle("/", r)
 
-	fmt.Printf("Start server at localhost:%s", os.Getenv("API_PORT"))
+	fmt.Printf("Start server at localhost:%s!\n", os.Getenv("API_PORT"))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("API_PORT")), r))
 }

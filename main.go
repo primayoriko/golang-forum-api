@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"gitlab.com/hydra/forum-api/api"
-	"gitlab.com/hydra/forum-api/api/seeds"
+	"gitlab.com/hydra/forum-api/api/seeders"
 )
 
 func main() {
@@ -18,12 +18,14 @@ func main() {
 		log.Fatalf("Error getting env, %v", err)
 	} else {
 		if len(os.Args) > 2 && os.Args[2] == "seed" {
-			if err := seeds.SeedData(); err != nil {
-				log.Fatalf("Seeding data encountered error, %v", err)
+			if err := seeders.SeedData(); err != nil {
+				log.Fatalf("Error encountered when seed data, %v", err)
+			} else {
+				fmt.Println("Seed data successful!")
 			}
 		} else if len(os.Args) > 2 && os.Args[2] == "hello" {
 			http.HandleFunc("/", hello)
-			fmt.Println("Server started")
+			fmt.Println("Server started!")
 			log.Fatal(http.ListenAndServe(":8008", nil))
 		} else {
 			api.Run()

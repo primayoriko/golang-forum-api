@@ -3,6 +3,7 @@ module gitlab.com/hydra/forum-api
 go 1.13
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/bxcodec/faker/v3 v3.5.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-errors/errors v1.1.1 // indirect
@@ -10,7 +11,6 @@ require (
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/jarcoal/httpmock v1.0.6 // indirect
-	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/twinj/uuid v1.0.0 // indirect

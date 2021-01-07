@@ -1,4 +1,4 @@
-package routes
+package routers
 
 import (
 	// "github.com/hydra/forum-api/api/controllers"
@@ -11,4 +11,6 @@ func AddThreadRoutes(router *mux.Router) error {
 	if route == nil {
 
 	}
+
+	return nil
 }

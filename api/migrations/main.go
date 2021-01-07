@@ -1,11 +1,18 @@
 package migrations
 
 import (
+	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
-	"gorm.io/gorm"
 )
 
-func MigrateModels(db *gorm.DB) error {
+func MigrateModels() error {
+	db, err := database.ConnectDB()
+
+	if err != nil {
+		// log.Fatalf("Error connecting to db, %v", err)
+		return err
+	}
+
 	if err := db.AutoMigrate(&models.User{}); err != nil {
 		return err
 	}
