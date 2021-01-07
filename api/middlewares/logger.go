@@ -2,7 +2,8 @@ package middlewares
 
 import "net/http"
 
-func jwtCheck(next http.Handler) http.Handler {
+// Log is a middleware method for writing log for every passed request
+func Log(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Logging stuff
 
