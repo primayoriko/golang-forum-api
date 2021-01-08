@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"os"
 
@@ -9,16 +10,11 @@ import (
 	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
+	"gorm.io/gorm"
 )
 
-type registerData struct {
-	Name     string
-	Password string
-	Email    string
-}
-
-// Register is function for create new User
-func Register(w http.ResponseWriter, r *http.Request) {
+// SignUp is function for create new User
+func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -40,9 +36,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if tx := db.Select("username", "email", "password").Create(&user); tx.Error != nil {
+	if result := db.Select("username", "email", "password").Create(&user); result.Error != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": tx.Error}, nil)
+			map[string]interface{}{"message": result.Error}, nil)
 		return
 	}
 
@@ -66,9 +62,15 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if tx := db.Where("username = ?", creds.Username).First(&user); tx.Error != nil {
+	if err := db.Where("username = ?", creds.Username).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.JSONResponseWriter(&w, http.StatusUnauthorized,
+				map[string]interface{}{"message": "wrong password/username"}, nil)
+			return
+		}
+
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": tx.Error}, nil)
+			map[string]interface{}{"message": err}, nil)
 		return
 	}
 

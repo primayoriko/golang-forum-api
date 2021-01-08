@@ -13,8 +13,8 @@ var threads []models.Thread = []models.Thread{
 
 // SeedThreads is function for seed Post data
 func SeedThreads(db *gorm.DB) error {
-	if tx := db.Create(&threads); tx.Error == nil {
-		return tx.Error
+	if result := db.Create(&threads); result.Error == nil {
+		return result.Error
 	}
 	return nil
 }

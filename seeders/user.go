@@ -15,8 +15,8 @@ var users []models.User = []models.User{
 
 // SeedUsers is function for seed Post data
 func SeedUsers(db *gorm.DB) error {
-	if tx := db.Create(&users); tx.Error == nil {
-		return tx.Error
+	if result := db.Create(&users); result.Error == nil {
+		return result.Error
 	}
 	return nil
 }
