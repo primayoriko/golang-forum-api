@@ -6,9 +6,9 @@ import (
 )
 
 var threads []models.Thread = []models.Thread{
-	{ID: 2, CreatorID: 1, Topic: "CP", Title: "How to Win CP"},
-	{ID: 4, CreatorID: 2, Topic: "CP", Title: "How to Win CP 3"},
-	{ID: 5, CreatorID: 2, Topic: "Ibadah", Title: "Tawakal"},
+	models.Thread{CreatorID: 1, Topic: "CP", Title: "How to Win CP"},
+	models.Thread{CreatorID: 2, Topic: "CP", Title: "How to Win CP 3"},
+	models.Thread{CreatorID: 2, Topic: "Ibadah", Title: "Tawakal"},
 }
 
 // SeedThreads is function for seed Post data

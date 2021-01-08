@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -12,37 +11,38 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
+type registerData struct {
+	Name     string
+	Password string
+	Email    string
+}
+
 // Register is function for create new User
 func Register(w http.ResponseWriter, r *http.Request) {
-	var user map[string]interface{}
+	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
 		return
 	}
 
-	password, ok := user["password"].(string)
-	if !ok {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
-		return
-	}
-
-	user["password"], err = utils.HashPassword(password)
+	user.Password, err = utils.HashPassword(user.Password)
 	if err != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": err}, nil)
 		return
 	}
 
 	db, err := database.ConnectDB()
 	if err != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": err}, nil)
 		return
 	}
 
-	fmt.Println(user)
-
-	if tx := db.Model(&models.User{}).Create(&user); tx.Error != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+	if tx := db.Select("username", "email", "password").Create(&user); tx.Error != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": tx.Error}, nil)
 		return
 	}
 
@@ -61,20 +61,21 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	db, err := database.ConnectDB()
 	if err != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": err}, nil)
 		return
 	}
 
 	if tx := db.Where("username = ?", creds.Username).First(&user); tx.Error != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": tx.Error}, nil)
 		return
 	}
 
 	isTruePass := utils.CheckPasswordHash(creds.Password, user.Password)
 	if !isTruePass {
 		utils.JSONResponseWriter(&w, http.StatusUnauthorized,
-			map[string]interface{}{
-				"message": "wrong password/username"}, nil)
+			map[string]interface{}{"message": "wrong password/username"}, nil)
 		return
 	}
 
@@ -86,13 +87,13 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": err}, nil)
 		return
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		map[string]interface{}{
-			"token": tokenString}, nil)
+		map[string]interface{}{"token": tokenString}, nil)
 	return
 }
 

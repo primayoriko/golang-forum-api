@@ -28,11 +28,14 @@ func DropTables() error {
 	return nil
 }
 
-// MigrateModels used to migrate table of models that need to be created in the database
+// MigrateModels used to migrate table of models that need to be created in the database by dropping existing tables then re-create it
 func MigrateModels() error {
+	if err := DropTables(); err != nil {
+		return err
+	}
+
 	db, err := database.ConnectDB()
 	if err != nil {
-		// log.Fatalf("Error connecting to db, %v", err)
 		return err
 	}
 

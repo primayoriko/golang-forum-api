@@ -6,11 +6,11 @@ import (
 )
 
 var posts []models.Post = []models.Post{
-	{ID: 1, AuthorID: 1, ThreadID: 2, Content: "Good! This is the start"},
-	{ID: 3, AuthorID: 2, ThreadID: 4, Content: "Good! This is the start"},
-	{ID: 2, AuthorID: 3, ThreadID: 4, Content: "Good! This is the start"},
-	{ID: 10, AuthorID: 2, ThreadID: 2, Content: "Good! This is the start"},
-	{ID: 5, AuthorID: 2, ThreadID: 5, Content: "Good! This is the start"},
+	models.Post{AuthorID: 1, ThreadID: 2, Content: "Good! This is the start"},
+	models.Post{AuthorID: 2, ThreadID: 4, Content: "Good! This is the start"},
+	models.Post{AuthorID: 3, ThreadID: 4, Content: "Good! This is the start"},
+	models.Post{AuthorID: 2, ThreadID: 2, Content: "Good! This is the start"},
+	models.Post{AuthorID: 2, ThreadID: 5, Content: "Good! This is the start"},
 }
 
 // SeedPosts is function for seed Post data

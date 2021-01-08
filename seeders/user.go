@@ -7,10 +7,11 @@ import (
 )
 
 var users []models.User = []models.User{
-	{ID: 1, Username: "naufal", Password: utils.HashPasswordNoErr("123"), Email: "p@g.com"},
-	{ID: 2, Username: "hasan", Password: utils.HashPasswordNoErr("cp-wf"), Email: "h@g.com"},
-	{ID: 3, Username: "taufiq", Password: utils.HashPasswordNoErr("pq-ceo"), Email: "t@g.com"},
-	{ID: 4, Username: "dean", Password: utils.HashPasswordNoErr("ctfd"), Email: "d@g.com"}}
+	models.User{Username: "naufal", Password: utils.HashPasswordNoErr("123"), Email: "p@g.com"},
+	models.User{Username: "hasan", Password: utils.HashPasswordNoErr("cp-wf"), Email: "h@g.com"},
+	models.User{Username: "taufiq", Password: utils.HashPasswordNoErr("pq-ceo"), Email: "t@g.com"},
+	models.User{Username: "dean", Password: utils.HashPasswordNoErr("ctfd"), Email: "d@g.com"},
+}
 
 // SeedUsers is function for seed Post data
 func SeedUsers(db *gorm.DB) error {

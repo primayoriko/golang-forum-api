@@ -6,7 +6,7 @@ import (
 
 // Thread is model for threads table in the db
 type Thread struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
+	ID        uint64    `gorm:"serial" json:"id"`
 	Title     string    `gorm:"size:255;not null" json:"title"`
 	Topic     string    `gorm:"size:255;not null" json:"topic"`
 	Creator   *User     `json:"creator"`

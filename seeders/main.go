@@ -11,9 +11,9 @@ import (
 
 // SeedData is function to seed all tables data to database
 func SeedData() error {
-	if err := migrations.DropTables(); err != nil {
-		return err
-	}
+	// if err := migrations.DropTables(); err != nil {
+	// 	return err
+	// }
 
 	if err := migrations.MigrateModels(); err != nil {
 		return err
@@ -34,24 +34,6 @@ func SeedData() error {
 	}
 
 	fmt.Println("Data successfully seeded")
-
-	// if err := SeedUsers(db); err != nil {
-	// 	return err
-	// }
-
-	// fmt.Println("User data created")
-
-	// if err := SeedThreads(db); err != nil {
-	// 	return err
-	// }
-
-	// fmt.Println("Thread data created")
-
-	// if err := SeedPosts(db); err != nil {
-	// 	return err
-	// }
-
-	// fmt.Println("Post data created")
 
 	return nil
 }

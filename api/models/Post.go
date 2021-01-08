@@ -6,7 +6,7 @@ import (
 
 // Post is model for posts table in the db
 type Post struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
+	ID        uint64    `gorm:"serial" json:"id"`
 	Author    *User     `json:"author"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	Thread    *Thread   `json:"thread"`

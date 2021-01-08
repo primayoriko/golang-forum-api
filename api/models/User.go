@@ -6,7 +6,7 @@ import (
 
 // User is model for users table in the db
 type User struct {
-	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
+	ID        uint32    `gorm:"serial" json:"id"`
 	Username  string    `gorm:"size:255;not null;unique" json:"username"`
 	Email     string    `gorm:"size:100;not null;unique" json:"email"`
 	Password  string    `gorm:"size:100;not null;" json:"password"`
