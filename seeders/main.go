@@ -3,8 +3,8 @@ package seeders
 import (
 	"fmt"
 
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/api/migrations"
+	"gitlab.com/hydra/forum-api/database"
+	"gitlab.com/hydra/forum-api/migrations"
 )
 
 // SeedData is function to seed all tables data to database

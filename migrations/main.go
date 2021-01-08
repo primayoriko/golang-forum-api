@@ -1,8 +1,8 @@
 package migrations
 
 import (
-	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
+	"gitlab.com/hydra/forum-api/database"
 )
 
 func MigrateModels() error {

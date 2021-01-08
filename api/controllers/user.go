@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
-	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
+	"gitlab.com/hydra/forum-api/database"
 )
 
 // Register is function for create new User
