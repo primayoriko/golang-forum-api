@@ -1,8 +1,6 @@
 package seeders
 
 import (
-	"errors"
-
 	"gitlab.com/hydra/forum-api/api/models"
 	"gorm.io/gorm"
 )
@@ -16,7 +14,7 @@ var threads []models.Thread = []models.Thread{
 // SeedThreads is function for seed Post data
 func SeedThreads(db *gorm.DB) error {
 	if tx := db.Create(&threads); tx.Error == nil {
-		return errors.New("seed threads data failed")
+		return tx.Error
 	}
 	return nil
 }

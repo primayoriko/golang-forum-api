@@ -1,8 +1,6 @@
 package seeders
 
 import (
-	"errors"
-
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
 	"gorm.io/gorm"
@@ -17,7 +15,7 @@ var users []models.User = []models.User{
 // SeedUsers is function for seed Post data
 func SeedUsers(db *gorm.DB) error {
 	if tx := db.Create(&users); tx.Error == nil {
-		return errors.New("seed users data failed")
+		return tx.Error
 	}
 	return nil
 }

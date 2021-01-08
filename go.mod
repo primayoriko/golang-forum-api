@@ -3,6 +3,7 @@ module gitlab.com/hydra/forum-api
 go 1.13
 
 require (
+	github.com/PaesslerAG/gval v1.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/bxcodec/faker/v3 v3.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
@@ -16,7 +17,8 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/mikunalpha/goas v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/steinfletcher/apitest v1.4.16 // indirect
+	github.com/steinfletcher/apitest v1.4.16
+	github.com/steinfletcher/apitest-jsonpath v1.6.0
 	github.com/twinj/uuid v1.0.0 // indirect
 	github.com/urfave/cli v1.22.5 // indirect
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad

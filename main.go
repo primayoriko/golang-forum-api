@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
 	"gitlab.com/hydra/forum-api/api"
-	"gitlab.com/hydra/forum-api/api/seeders"
+	"gitlab.com/hydra/forum-api/seeders"
 )
 
 func main() {
@@ -20,21 +18,11 @@ func main() {
 		if len(os.Args) > 2 && os.Args[2] == "seed" {
 			if err := seeders.SeedData(); err != nil {
 				log.Fatalf("Error encountered when seed data, %v", err)
-			} else {
-				fmt.Println("Seed data successful!")
 			}
-		} else if len(os.Args) > 2 && os.Args[2] == "hello" {
-			http.HandleFunc("/", hello)
-			fmt.Println("Server started!")
-			log.Fatal(http.ListenAndServe(":8008", nil))
+		} else if len(os.Args) > 2 && os.Args[2] == "migrate" {
+			// tests.Run()
 		} else {
 			api.Run()
 		}
 	}
-}
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"message":"hello world!"}`))
 }

@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
+	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
-	"gitlab.com/hydra/forum-api/database"
 )
 
 // Register is function for create new User
@@ -37,6 +38,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
+
+	fmt.Println(user)
 
 	if tx := db.Model(&models.User{}).Create(&user); tx.Error != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
