@@ -11,8 +11,8 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-// JwtCheck is a method for checking jwt token and passing the creds
-func JwtCheck(next http.Handler) http.Handler {
+// CheckJWT is a method for checking jwt token and passing the creds
+func CheckJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if !strings.Contains(authorizationHeader, "Bearer ") {

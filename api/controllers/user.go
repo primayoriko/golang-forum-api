@@ -99,12 +99,28 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// ChangeUserData is for change it's own user data
-func ChangeUserData(w http.ResponseWriter, r *http.Request) {
-	// var cred Credential
+// GetUsers is method for getting data for specified user(s) based on some criteria
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	// db, err := database.ConnectDB()
+	// if err != nil {
+	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+	// 		map[string]interface{}{"message": err}, nil)
+	// 	return
+	// }
+	utils.JSONResponseWriter(&w, http.StatusOK, nil, nil)
 }
 
-// DeleteUserAccount is for delete it's own user account
-func DeleteUserAccount(w http.ResponseWriter, r *http.Request) {
+// UpdateUser is for change it's own user data
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	// db, err := database.ConnectDB()
+	// if err != nil {
+	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+	// 		map[string]interface{}{"message": err}, nil)
+	// 	return
+	// }
+}
+
+// DeleteUser is for delete it's own user account
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// var cred Credential
 }

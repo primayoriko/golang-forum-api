@@ -5,8 +5,8 @@ import "net/http"
 // Middleware is a alias for func(http.Handler) http.Handler
 type Middleware func(http.Handler) http.Handler
 
-// PipelineHandlers is a util function for helping write a pipeline of http.Handler
-func PipelineHandlers(middlewares []Middleware,
+// ChainHandlers is a util function for helping write a pipeline of http.Handler
+func ChainHandlers(middlewares []Middleware,
 	handler http.Handler) http.Handler {
 
 	for i := len(middlewares); i > 0; i-- {
@@ -16,8 +16,8 @@ func PipelineHandlers(middlewares []Middleware,
 	return handler
 }
 
-// PipelineHandlerFuncs is a util function for helping write a pipeline of http.HandlerFunc
-func PipelineHandlerFuncs(middlewares []Middleware,
+// ChainHandlerFuncs is a util function for helping write a pipeline of http.HandlerFunc
+func ChainHandlerFuncs(middlewares []Middleware,
 	handlerFunc func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 
 	var handler http.Handler = http.HandlerFunc(handlerFunc)
