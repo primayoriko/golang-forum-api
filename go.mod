@@ -9,7 +9,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-errors/errors v1.1.1 // indirect
 	github.com/go-pg/pg v8.0.7+incompatible // indirect
-	github.com/gorilla/context v1.1.1 // indirect
+	github.com/gorilla/context v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/iancoleman/orderedmap v0.1.0 // indirect
 	github.com/jarcoal/httpmock v1.0.6 // indirect

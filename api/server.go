@@ -5,12 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
 	"gitlab.com/hydra/forum-api/api/routers"
 )
 
+// Run would start server for the api
 func Run() {
 	// if err := migrations.MigrateModels(); err != nil {
 	// 	log.Fatalf("Error model migration occured, %v", err)
@@ -25,11 +27,14 @@ func Run() {
 	routers.AddPostRoutes(r)
 	// http.Handle("/", r)
 
+	writeTimeout, _ := strconv.Atoi(os.Getenv("WRITE_TIMEOUT_SEC"))
+	readTimeout, _ := strconv.Atoi(os.Getenv("READ_TIMEOUT_SEC"))
+
 	server := &http.Server{
 		Handler:      r,
 		Addr:         fmt.Sprintf("localhost:%s", os.Getenv("API_PORT")),
-		WriteTimeout: 30 * time.Second,
-		ReadTimeout:  30 * time.Second,
+		WriteTimeout: time.Duration(writeTimeout) * time.Second,
+		ReadTimeout:  time.Duration(readTimeout) * time.Second,
 	}
 
 	fmt.Printf("Start server at localhost:%s!\n", os.Getenv("API_PORT"))

@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
 	"gitlab.com/hydra/forum-api/api/database"
@@ -10,95 +11,83 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-// Credentials is data used for login
-type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-// Claims is login result as an auth token
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
-
 // Register is function for create new User
 func Register(w http.ResponseWriter, r *http.Request) {
 	var user map[string]interface{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		utils.JsonResponseWriter(&w, http.StatusBadRequest, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
 		return
 	}
 
 	password, ok := user["password"].(string)
 	if !ok {
-		utils.JsonResponseWriter(&w, http.StatusBadRequest, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
 		return
 	}
 
 	user["password"], err = utils.HashPassword(password)
 	if err != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
 	db, err := database.ConnectDB()
 	if err != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
 	if tx := db.Model(&models.User{}).Create(&user); tx.Error != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
-	utils.JsonResponseWriter(&w, http.StatusCreated, nil, nil)
+	utils.JSONResponseWriter(&w, http.StatusCreated, nil, nil)
 }
 
 // SignIn is method for get token for creds/auth
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var creds Credentials
+	var creds models.Credentials
 	var user models.User
 
 	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
-		utils.JsonResponseWriter(&w, http.StatusBadRequest, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
 		return
 	}
 
 	db, err := database.ConnectDB()
 	if err != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
 	if tx := db.Where("username = ?", creds.Username).First(&user); tx.Error != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
 	isTruePass := utils.CheckPasswordHash(creds.Password, user.Password)
 	if !isTruePass {
-		utils.JsonResponseWriter(&w, http.StatusUnauthorized,
+		utils.JSONResponseWriter(&w, http.StatusUnauthorized,
 			map[string]interface{}{
 				"message": "wrong password/username"}, nil)
 		return
 	}
 
-	claims := &Claims{
+	claims := &models.Claims{
 		Username:       creds.Username,
 		StandardClaims: jwt.StandardClaims{},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString("")
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
-		utils.JsonResponseWriter(&w, http.StatusInternalServerError, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError, nil, nil)
 		return
 	}
 
-	utils.JsonResponseWriter(&w, http.StatusOK,
+	utils.JSONResponseWriter(&w, http.StatusOK,
 		map[string]interface{}{
 			"token": tokenString}, nil)
 	return
