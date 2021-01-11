@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Forum Backend API",
+    "description": "Forum API implemented using golang",
+    "contact": {
+      "name": "Naufal",
+      "url": "http://primayoriko.github.io",
+      "email": "primayoriko@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://en.wikipedia.org/wiki/MIT_License"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http:/localhost:8008",
+      "description": " LocalServer"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "securitySchemes": {
+      "AuthorizationHeader": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Inuput your token"
+      }
+    }
+  },
+  "security": [
+    {
+      "AuthorizationHeader": []
+    }
+  ]
+}

@@ -15,10 +15,23 @@ import (
 )
 
 // Run would start server for the api
+// @Version 1.0.0
+// @Title Forum Backend API
+// @Description Forum API implemented using golang
+// @ContactName Naufal
+// @ContactEmail primayoriko@gmail.com
+// @ContactURL http://primayoriko.github.io
+// @LicenseName MIT
+// @LicenseURL https://en.wikipedia.org/wiki/MIT_License
+// @Server http:/localhost:8008 LocalServer
+// @Security AuthorizationHeader read write
+// @SecurityScheme AuthorizationHeader http bearer Input your token
 func Run() {
 	logger.NewLogger()
-
 	r := mux.NewRouter()
+
+	fs := http.FileServer(http.Dir("./docs/swaggerui/"))
+	r.PathPrefix("/docs").Handler(http.StripPrefix("/docs", fs))
 
 	routers.AddUserRoutes(r)
 	routers.AddThreadRoutes(r)
@@ -37,7 +50,3 @@ func Run() {
 	fmt.Printf("Start server at localhost:%s!\n", os.Getenv("API_PORT"))
 	log.Fatalln(server.ListenAndServe())
 }
-
-/*
-https://stackoverflow.com/questions/64768950/how-to-use-specific-middleware-for-specific-routes-in-a-get-subrouter-in-gorilla
-*/
