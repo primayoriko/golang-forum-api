@@ -7,7 +7,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/context"
-	"gitlab.com/hydra/forum-api/api/models"
+	"gitlab.com/hydra/forum-api/api/auth"
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
@@ -21,7 +21,7 @@ func CheckJWT(next http.Handler) http.Handler {
 		}
 
 		jwtTokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
-		claims := &models.Claims{}
+		claims := &auth.Claims{}
 
 		jwtToken, err := jwt.ParseWithClaims(jwtTokenString, claims,
 			func(token *jwt.Token) (interface{}, error) {

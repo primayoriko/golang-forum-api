@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
+	"gitlab.com/hydra/forum-api/api/auth"
 	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
@@ -47,7 +49,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 // SignIn is method for get token for creds/auth
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var creds models.Credentials
+	var creds auth.Credentials
 	var user models.User
 
 	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
@@ -81,7 +83,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims := &models.Claims{
+	claims := &auth.Claims{
 		Username:       creds.Username,
 		StandardClaims: jwt.StandardClaims{},
 	}
@@ -107,6 +109,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	// 		map[string]interface{}{"message": err}, nil)
 	// 	return
 	// }
+	mux.Vars(r)
+
 	utils.JSONResponseWriter(&w, http.StatusOK, nil, nil)
 }
 

@@ -1,4 +1,4 @@
-package models
+package auth
 
 // Credentials is data used for login
 type Credentials struct {

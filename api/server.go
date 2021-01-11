@@ -2,18 +2,22 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
+
+	"gitlab.com/hydra/forum-api/api/logger"
 	"gitlab.com/hydra/forum-api/api/routers"
 )
 
 // Run would start server for the api
 func Run() {
+	logger.NewLogger()
+
 	r := mux.NewRouter()
 
 	routers.AddUserRoutes(r)
