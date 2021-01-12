@@ -19,8 +19,7 @@ func AddThreadRoutes(router *mux.Router) error {
 			}, controllers.GetThread)).
 		Methods("GET").Name("GetThread")
 
-	threadRouter.Path("/").
-		Queries().
+	threadRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{
 				middlewares.CheckJWT,
@@ -28,7 +27,15 @@ func AddThreadRoutes(router *mux.Router) error {
 			}, controllers.GetThreadsList)).
 		Methods("GET").Name("GetThreadsList")
 
-	threadRouter.Path("/").
+	threadRouter.Queries().
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.CreateThread)).
+		Methods("POST").Name("CreateThread")
+
+	threadRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{
 				middlewares.CheckJWT,

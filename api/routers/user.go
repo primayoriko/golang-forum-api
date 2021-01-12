@@ -28,19 +28,21 @@ func AddUserRoutes(router *mux.Router) error {
 			middlewares.Log,
 		}, controllers.GetUsers)).Methods("GET")
 
-	userRouter.HandleFunc("/",
-		utils.ChainHandlerFuncs([]utils.Middleware{
-			middlewares.CheckJWT,
-			middlewares.Log,
-		}, controllers.GetUsers)).Methods("GET")
+	userRouter.Queries().
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.GetUsers)).Methods("GET")
+
+	userRouter.Queries().
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.UpdateUser)).Methods("PATCH")
 
 	userRouter.HandleFunc("/",
-		utils.ChainHandlerFuncs([]utils.Middleware{
-			middlewares.CheckJWT,
-			middlewares.Log,
-		}, controllers.UpdateUser)).Methods("PATCH")
-
-	userRouter.HandleFunc("/{username}",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.CheckJWT,
 			middlewares.Log,

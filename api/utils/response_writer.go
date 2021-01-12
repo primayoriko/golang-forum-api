@@ -6,7 +6,7 @@ import (
 )
 
 // JSONResponseWriter used to make body's response of the request with(out) JSON format. Could edit status code and header of the response too.
-func JSONResponseWriter(w *http.ResponseWriter, statusCode int, body map[string]interface{}, headerFields map[string]string) error {
+func JSONResponseWriter(w *http.ResponseWriter, statusCode int, body interface{}, headerFields map[string]string) error {
 	(*w).WriteHeader(statusCode)
 
 	// var m = map[string]interface{}{"complex": 1, "b": []interface{}{"2", "4"}, "c": map[string]interface{}{"int": 1, "string": "giraffe", "bool": true, "float": 4.0}}
