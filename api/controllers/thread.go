@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -150,6 +151,12 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if thread.CreatorID != context.Get(r, "id").(uint32) || thread.CreatorID != 0 {
+		utils.JSONResponseWriter(&w, http.StatusForbidden,
+			nil, nil)
+		return
+	}
+
 	thread.CreatorID = context.Get(r, "id").(uint32)
 
 	db, err := database.ConnectDB()
@@ -170,14 +177,23 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 
 // UpdateThread will update an existing Thread
 func UpdateThread(w http.ResponseWriter, r *http.Request) {
-	var thread models.Thread
+	userID := context.Get(r, "id").(uint32)
+	var thread, dbThread models.Thread
 	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			map[string]interface{}{"message": "invalid body format"}, nil)
 		return
 	}
 
-	thread.CreatorID = context.Get(r, "id").(uint32)
+	if thread.ID == 0 {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			map[string]interface{}{"message": "need thread id"}, nil)
+		return
+	}
+
+	fmt.Println(thread)
+
+	// thread.CreatorID = context.Get(r, "id").(uint32)
 
 	db, err := database.ConnectDB()
 	if err != nil {
@@ -186,7 +202,7 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
+	if err := db.Where("id = ?", thread.ID).First(&dbThread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
 				nil, nil)
@@ -195,9 +211,39 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			map[string]interface{}{"message": err}, nil)
-
 		return
 	}
+
+	if dbThread.CreatorID != userID || thread.CreatorID != userID || thread.CreatorID != 0 {
+		utils.JSONResponseWriter(&w, http.StatusForbidden,
+			nil, nil)
+		return
+	}
+
+	thread.CreatorID = userID
+
+	if err := db.Model(&dbThread).Updates(thread).Error; err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			map[string]interface{}{"message": err}, nil)
+		return
+	}
+
+	utils.JSONResponseWriter(&w, http.StatusNoContent,
+		map[string]interface{}{"message": err}, nil)
+	return
+
+	// if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
+	// 	if errors.Is(err, gorm.ErrRecordNotFound) {
+	// 		utils.JSONResponseWriter(&w, http.StatusNotFound,
+	// 			nil, nil)
+	// 		return
+	// 	}
+
+	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+	// 		map[string]interface{}{"message": err}, nil)
+
+	// 	return
+	// }
 
 }
 

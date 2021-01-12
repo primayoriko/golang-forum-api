@@ -67,3 +67,10 @@
 {"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-12T08:54:00+07:00"}
 {"level":"info","msg":"DELETE /threads/3, response 403 Forbidden","time":"2021-01-12T11:13:45+07:00"}
 {"level":"info","msg":"DELETE /threads/1, response 500 Internal Server Error","time":"2021-01-12T11:14:04+07:00"}
+{"level":"info","msg":"PATCH /threads, response 400 Bad Request","time":"2021-01-12T11:30:58+07:00"}
+{"level":"info","msg":"PATCH /threads, response 0 ","time":"2021-01-12T11:31:44+07:00"}
+{"level":"info","msg":"PATCH /threads, response 0 ","time":"2021-01-12T11:32:07+07:00"}
+{"level":"info","msg":"PATCH /threads, response 500 Internal Server Error","time":"2021-01-12T12:06:56+07:00"}
+{"level":"info","msg":"PATCH /threads, response 204 No Content","time":"2021-01-12T12:09:14+07:00"}
+{"level":"info","msg":"PATCH /threads, response 204 No Content","time":"2021-01-12T12:10:17+07:00"}
+{"level":"info","msg":"PATCH /threads, response 403 Forbidden","time":"2021-01-12T12:24:44+07:00"}
