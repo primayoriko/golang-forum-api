@@ -81,3 +81,4 @@
 {"level":"info","msg":"GET /threads, response 200 OK","time":"2021-01-12T16:04:09+07:00"}
 {"level":"info","msg":"GET /threads?page=1\u0026pagesize=1, response 200 OK","time":"2021-01-12T16:04:26+07:00"}
 {"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T16:04:32+07:00"}
+{"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T22:47:19+07:00"}

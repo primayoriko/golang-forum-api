@@ -31,7 +31,12 @@ func Run() {
 	r := mux.NewRouter()
 
 	fs := http.FileServer(http.Dir("./docs/swaggerui/"))
-	r.PathPrefix("/docs/").Handler(http.StripPrefix("/docs/", fs))
+	r.PathPrefix("/docs").
+		Subrouter().
+		StrictSlash(true).
+		// Path("/").
+		Queries().
+		Handler(http.StripPrefix("/docs/", fs))
 
 	routers.AddUserRoutes(r)
 	routers.AddThreadRoutes(r)

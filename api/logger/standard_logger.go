@@ -31,12 +31,12 @@ var (
 
 // NewLogger is nethod for initialize the log functionality
 func NewLogger() *StandardLogger {
-	logPath := os.Getenv("LOG_FILEPATH")
+	// logPath := os.Getenv("LOG_FILEPATH")
 	pathMap := lfshook.PathMap{
-		logrus.InfoLevel:  logPath,
-		logrus.ErrorLevel: logPath,
-		logrus.PanicLevel: logPath,
-		logrus.FatalLevel: logPath,
+		logrus.InfoLevel:  os.Getenv("INFO_LOG_FILEPATH"),
+		logrus.ErrorLevel: os.Getenv("ERROR_LOG_FILEPATH"),
+		logrus.PanicLevel: os.Getenv("PANIC_LOG_FILEPATH"),
+		logrus.FatalLevel: os.Getenv("FATAL_LOG_FILEPATH"),
 	}
 
 	var baseLogger = logrus.New()

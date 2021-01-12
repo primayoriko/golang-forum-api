@@ -20,7 +20,7 @@ func Test_SignUp(t *testing.T) {
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/signup", controllers.SignUp)
+	r.HandleFunc("/signup", controllers.SignUp).Methods("POST")
 
 	ts := httptest.NewServer(r)
 
@@ -55,13 +55,13 @@ func Test_SignUp(t *testing.T) {
 	})
 }
 
-func TestLogin(t *testing.T) {
+func Test_Login(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/signin", controllers.SignIn)
+	r.HandleFunc("/signin", controllers.SignIn).Methods("POST")
 
 	ts := httptest.NewServer(r)
 
