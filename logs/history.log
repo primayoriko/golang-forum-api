@@ -74,3 +74,7 @@
 {"level":"info","msg":"PATCH /threads, response 204 No Content","time":"2021-01-12T12:09:14+07:00"}
 {"level":"info","msg":"PATCH /threads, response 204 No Content","time":"2021-01-12T12:10:17+07:00"}
 {"level":"info","msg":"PATCH /threads, response 403 Forbidden","time":"2021-01-12T12:24:44+07:00"}
+{"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:26:15+07:00"}
+{"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:28:23+07:00"}
+{"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:28:49+07:00"}
+{"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:29:22+07:00"}
