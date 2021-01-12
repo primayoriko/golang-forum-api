@@ -45,6 +45,7 @@ func CheckJWT(next http.Handler) http.Handler {
 
 		defer context.Clear(r)
 		context.Set(r, "username", claims.Username)
+		context.Set(r, "id", claims.ID)
 
 		next.ServeHTTP(w, r)
 	})

@@ -84,6 +84,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := &auth.Claims{
+		ID:             user.ID,
 		Username:       creds.Username,
 		StandardClaims: jwt.StandardClaims{},
 	}

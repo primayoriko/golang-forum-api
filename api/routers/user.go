@@ -9,7 +9,7 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-// AddUserRoutes is function to add subroute for /users prefixes path
+// AddUserRoutes is function to add subroute for auth and /users prefixes path
 func AddUserRoutes(router *mux.Router) error {
 	router.HandleFunc("/signup",
 		utils.ChainHandlerFuncs([]utils.Middleware{
@@ -20,27 +20,27 @@ func AddUserRoutes(router *mux.Router) error {
 			middlewares.Log,
 		}, controllers.SignIn)).Methods("POST")
 
-	userRouters := router.PathPrefix("/users").Subrouter()
-	// userRouters.HandleFunc("/{username:[a-zA-Z0-9]+}",
-	userRouters.HandleFunc("/{username}",
+	userRouter := router.PathPrefix("/users").Subrouter()
+	// userRouter.HandleFunc("/{username:[a-zA-Z0-9]+}",
+	userRouter.HandleFunc("/{username}",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.CheckJWT,
 			middlewares.Log,
 		}, controllers.GetUsers)).Methods("GET")
 
-	userRouters.HandleFunc("/",
+	userRouter.HandleFunc("/",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.CheckJWT,
 			middlewares.Log,
 		}, controllers.GetUsers)).Methods("GET")
 
-	userRouters.HandleFunc("/",
+	userRouter.HandleFunc("/",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.CheckJWT,
 			middlewares.Log,
 		}, controllers.UpdateUser)).Methods("PATCH")
 
-	userRouters.HandleFunc("/",
+	userRouter.HandleFunc("/{username}",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.CheckJWT,
 			middlewares.Log,

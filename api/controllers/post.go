@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// GetPosts will fetch all posts of a specified thread
+// GetPosts will fetch all posts of a specified criteria
 func GetPosts(w http.ResponseWriter, r *http.Request) {
 
 }
