@@ -82,3 +82,11 @@
 {"level":"info","msg":"GET /threads?page=1\u0026pagesize=1, response 200 OK","time":"2021-01-12T16:04:26+07:00"}
 {"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T16:04:32+07:00"}
 {"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T22:47:19+07:00"}
+{"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T22:58:42+07:00"}
+{"level":"info","msg":"GET /threads?userid=2, response 200 OK","time":"2021-01-12T23:14:18+07:00"}
+{"level":"info","msg":"GET /threads?userid=2, response 200 OK","time":"2021-01-12T23:17:30+07:00"}
+{"level":"info","msg":"GET /threads/1, response 200 OK","time":"2021-01-12T23:28:28+07:00"}
+{"level":"info","msg":"GET /threads/12, response 404 Not Found","time":"2021-01-12T23:52:11+07:00"}
+{"level":"info","msg":"POST /threads, response 403 Forbidden","time":"2021-01-13T00:37:27+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T00:39:28+07:00"}
+{"level":"info","msg":"PATCH /threads, response 500 Internal Server Error","time":"2021-01-13T01:05:32+07:00"}

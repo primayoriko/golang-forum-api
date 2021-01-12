@@ -16,3 +16,16 @@ type Thread struct {
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
+
+// // ThreadCreateRequest is request body schema for creating thread
+// type ThreadCreateRequest struct {
+// 	Title string `gorm:"size:255;not null" json:"title"`
+// 	Topic string `gorm:"size:255;not null" json:"topic"`
+// }
+
+// // ThreadUpdateRequest is request body schema for updating thread
+// type ThreadUpdateRequest struct {
+// 	ID    uint64 `gorm:"serial" json:"id"`
+// 	Title string `gorm:"size:255;not null" json:"title"`
+// 	Topic string `gorm:"size:255;not null" json:"topic"`
+// }

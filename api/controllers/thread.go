@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,8 +24,6 @@ import (
 // @Resource threads
 // @Route /threads [get]
 func GetThreadsList(w http.ResponseWriter, r *http.Request) {
-	// cUsername := context.Get(r, "username")
-	// cUserID := context.Get(r, "id")
 	username := r.FormValue("username")
 	topic := r.FormValue("topic")
 	title := r.FormValue("title")
@@ -60,7 +57,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 		if err := db.Where("username = ?", username).First(&user).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				utils.JSONResponseWriter(&w, http.StatusNotFound,
-					*(models.NewErrorResponse("couldn't find any threads")), nil)
+					*(models.NewErrorResponse("can't find any threads")), nil)
 				return
 			}
 
@@ -71,7 +68,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 
 		if userID != 0 && userID != user.ID {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				*(models.NewErrorResponse("couldn't find any threads")), nil)
+				*(models.NewErrorResponse("can't find any threads")), nil)
 			return
 		}
 	}
@@ -79,7 +76,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	var threads []models.Thread
 	if userID != 0 || user.ID != 0 || topic != "" || title != "" {
 		err = db.Model(&models.Thread{}).
-			Where("ID = ? OR ID = ? OR topic =  ? OR title = ?",
+			Where("creator_id = ? OR creator_id = ? OR topic =  ? OR title = ?",
 				userID, user.ID, topic, title).
 			Offset(offset).
 			Limit(pageSize).
@@ -134,7 +131,7 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				*(models.NewErrorResponse("couldn't find specified thread")), nil)
+				*(models.NewErrorResponse("can't find specified thread")), nil)
 			return
 		}
 
@@ -150,14 +147,20 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 
 // CreateThread will make a new thread
 func CreateThread(w http.ResponseWriter, r *http.Request) {
-	var thread models.Thread
+	var thread models.Thread //CreateRequest
 	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if thread.CreatorID != context.Get(r, "id").(uint32) || thread.CreatorID != 0 {
+	if thread.ID != 0 {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("can't specify id since it's automatically generated")), nil)
+		return
+	}
+
+	if thread.CreatorID != context.Get(r, "id").(uint32) && thread.CreatorID != 0 {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do the action as this user")), nil)
 		return
@@ -172,7 +175,8 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Select("title", "topic", "creator_id").Create(&thread).Error; err != nil {
+	if err := db.Select("title", "topic", "creator_id").
+		Create(&thread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return
@@ -197,10 +201,6 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(thread)
-
-	// thread.CreatorID = context.Get(r, "id").(uint32)
-
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
@@ -211,7 +211,7 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	if err := db.Where("id = ?", thread.ID).First(&dbThread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				*(models.NewErrorResponse("couldn't find specified thread")), nil)
+				*(models.NewErrorResponse("can't find specified thread")), nil)
 			return
 		}
 
@@ -220,15 +220,22 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if dbThread.CreatorID != userID || thread.CreatorID != userID || thread.CreatorID != 0 {
+	if dbThread.CreatorID != userID ||
+		(thread.CreatorID != userID && thread.CreatorID != 0) {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-			*(models.NewErrorResponse("can't do the action as this user")), nil)
+			*(models.NewErrorResponse("can't do specified action as this user")), nil)
 		return
 	}
 
-	thread.CreatorID = userID
+	// thread.CreatorID = userID
+	if thread.Topic != "" {
+		dbThread.Topic = thread.Topic
+	}
+	if thread.Title != "" {
+		dbThread.Title = thread.Title
+	}
 
-	if err := db.Model(&dbThread).Updates(thread).Error; err != nil {
+	if err := db.Save(&dbThread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return
@@ -263,7 +270,7 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				*(models.NewErrorResponse("couldn't find specified thread")), nil)
+				*(models.NewErrorResponse("can't find specified thread")), nil)
 			return
 		}
 
@@ -287,6 +294,6 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		interface{}(thread), nil)
+		thread, nil)
 	return
 }
