@@ -18,6 +18,12 @@ import (
 )
 
 // GetThreadsList will fetch all threads list of specific criteria
+// @Title Get Thread List.
+// @Description Get all related thread of specific criteria.
+// @Param  groupID  path  int  true  "Id of a specific group."
+// @Success  200  array  models.Thread  "Thread JSON"
+// @Resource threads
+// @Route /threads [get]
 func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	// cUsername := context.Get(r, "username")
 	// cUserID := context.Get(r, "id")
@@ -32,7 +38,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 
 	if !validate.IsInt(userIDStr) || !validate.IsInt(pageNumStr) || !validate.IsInt(pageSizeStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "bad query value"}, nil)
+			*(models.NewErrorResponse("bad query value")), nil)
 		return
 	}
 
@@ -45,7 +51,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil || db == nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": "failed to connect db"}, nil)
+			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
 	}
 
@@ -54,18 +60,18 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 		if err := db.Where("username = ?", username).First(&user).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				utils.JSONResponseWriter(&w, http.StatusNotFound,
-					nil, nil)
+					*(models.NewErrorResponse("couldn't find any threads")), nil)
 				return
 			}
 
 			utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-				map[string]interface{}{"message": err}, nil)
+				*(models.NewErrorResponse(err.Error())), nil)
 			return
 		}
 
 		if userID != 0 && userID != user.ID {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				nil, nil)
+				*(models.NewErrorResponse("couldn't find any threads")), nil)
 			return
 		}
 	}
@@ -87,12 +93,12 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		interface{}(threads), nil)
+		threads, nil)
 	return
 }
 
@@ -102,7 +108,7 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 
 	if idStr == "" || !validate.IsInt(idStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "invalid id format"}, nil)
+			*(models.NewErrorResponse("invalid id format")), nil)
 		return
 	}
 
@@ -113,7 +119,7 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil || db == nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": "failed to connect db"}, nil)
+			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
 	}
 
@@ -128,17 +134,17 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				nil, nil)
+				*(models.NewErrorResponse("couldn't find specified thread")), nil)
 			return
 		}
 
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		interface{}(thread), nil)
+		thread, nil)
 	return
 }
 
@@ -147,13 +153,13 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 	var thread models.Thread
 	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "invalid body format"}, nil)
+			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
 	if thread.CreatorID != context.Get(r, "id").(uint32) || thread.CreatorID != 0 {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-			nil, nil)
+			*(models.NewErrorResponse("can't do the action as this user")), nil)
 		return
 	}
 
@@ -162,13 +168,13 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": "failed to connect db"}, nil)
+			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
 	}
 
 	if err := db.Select("title", "topic", "creator_id").Create(&thread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -181,13 +187,13 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	var thread, dbThread models.Thread
 	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "invalid body format"}, nil)
+			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
 	if thread.ID == 0 {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "need thread id"}, nil)
+			*(models.NewErrorResponse("need thread id")), nil)
 		return
 	}
 
@@ -198,25 +204,25 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": "failed to connect db"}, nil)
+			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
 	}
 
 	if err := db.Where("id = ?", thread.ID).First(&dbThread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				nil, nil)
+				*(models.NewErrorResponse("couldn't find specified thread")), nil)
 			return
 		}
 
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	if dbThread.CreatorID != userID || thread.CreatorID != userID || thread.CreatorID != 0 {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-			nil, nil)
+			*(models.NewErrorResponse("can't do the action as this user")), nil)
 		return
 	}
 
@@ -224,27 +230,13 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 
 	if err := db.Model(&dbThread).Updates(thread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusNoContent,
-		map[string]interface{}{"message": err}, nil)
+		*(models.NewErrorResponse(err.Error())), nil)
 	return
-
-	// if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
-	// 	if errors.Is(err, gorm.ErrRecordNotFound) {
-	// 		utils.JSONResponseWriter(&w, http.StatusNotFound,
-	// 			nil, nil)
-	// 		return
-	// 	}
-
-	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-	// 		map[string]interface{}{"message": err}, nil)
-
-	// 	return
-	// }
-
 }
 
 // DeleteThread will delete an existing Thread
@@ -254,7 +246,7 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 
 	if idStr == "" || !validate.IsInt(idStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			map[string]interface{}{"message": "invalid id format"}, nil)
+			*(models.NewErrorResponse("invalid id format")), nil)
 		return
 	}
 
@@ -263,7 +255,7 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": "failed to connect db"}, nil)
+			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
 	}
 
@@ -271,25 +263,25 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				nil, nil)
+				*(models.NewErrorResponse("couldn't find specified thread")), nil)
 			return
 		}
 
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 
 		return
 	}
 
 	if thread.CreatorID != userID.(uint32) {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-			nil, nil)
+			*(models.NewErrorResponse("can't do the action as this user")), nil)
 		return
 	}
 
 	if err := db.Delete(&thread, id).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 
 		return
 	}

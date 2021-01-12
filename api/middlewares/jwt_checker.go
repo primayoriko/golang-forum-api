@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/context"
 	"gitlab.com/hydra/forum-api/api/auth"
+	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
@@ -16,7 +17,8 @@ func CheckJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if !strings.Contains(authorizationHeader, "Bearer ") {
-			utils.JSONResponseWriter(&w, http.StatusUnauthorized, nil, nil)
+			utils.JSONResponseWriter(&w, http.StatusUnauthorized,
+				*(models.NewErrorResponse("authentication failed")), nil)
 			return
 		}
 
@@ -30,7 +32,8 @@ func CheckJWT(next http.Handler) http.Handler {
 
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
-				utils.JSONResponseWriter(&w, http.StatusUnauthorized, nil, nil)
+				utils.JSONResponseWriter(&w, http.StatusUnauthorized,
+					*(models.NewErrorResponse("authentication failed")), nil)
 				return
 			}
 
@@ -39,7 +42,8 @@ func CheckJWT(next http.Handler) http.Handler {
 		}
 
 		if !jwtToken.Valid {
-			utils.JSONResponseWriter(&w, http.StatusUnauthorized, nil, nil)
+			utils.JSONResponseWriter(&w, http.StatusUnauthorized,
+				*(models.NewErrorResponse("authentication failed")), nil)
 			return
 		}
 

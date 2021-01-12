@@ -20,27 +20,28 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest, nil, nil)
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
 	user.Password, err = utils.HashPassword(user.Password)
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
-	if result := db.Select("username", "email", "password").Create(&user); result.Error != nil {
+	if err := db.Select("username", "email", "password").Create(&user).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": result.Error}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -60,26 +61,26 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	db, err := database.ConnectDB()
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	if err := db.Where("username = ?", creds.Username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusUnauthorized,
-				map[string]interface{}{"message": "wrong password/username"}, nil)
+				*(models.NewErrorResponse("wrong password/username")), nil)
 			return
 		}
 
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	isTruePass := utils.CheckPasswordHash(creds.Password, user.Password)
 	if !isTruePass {
 		utils.JSONResponseWriter(&w, http.StatusUnauthorized,
-			map[string]interface{}{"message": "wrong password/username"}, nil)
+			*(models.NewErrorResponse("wrong password/username")), nil)
 		return
 	}
 
@@ -93,7 +94,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			map[string]interface{}{"message": err}, nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -107,7 +108,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	// db, err := database.ConnectDB()
 	// if err != nil {
 	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-	// 		map[string]interface{}{"message": err}, nil)
+	// 		*(models.NewErrorResponse(err.Error())), nil)
 	// 	return
 	// }
 	mux.Vars(r)
@@ -120,7 +121,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// db, err := database.ConnectDB()
 	// if err != nil {
 	// 	utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-	// 		map[string]interface{}{"message": err}, nil)
+	// 		*(models.NewErrorResponse(err.Error())), nil)
 	// 	return
 	// }
 }

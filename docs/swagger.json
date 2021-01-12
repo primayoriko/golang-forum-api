@@ -20,8 +20,135 @@
       "description": " LocalServer"
     }
   ],
-  "paths": {},
+  "paths": {
+    "/threads": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Thread JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Thread"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "threads"
+        ],
+        "summary": "Get Thread List.",
+        "description": " Get all related thread of specific criteria.",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "description": "Id of a specific group.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Id of a specific group."
+            }
+          }
+        ]
+      }
+    }
+  },
   "components": {
+    "schemas": {
+      "gitlab.com.hydra.forum-api.api.models.Thread": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "object",
+            "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+          },
+          "creator_id": {
+            "type": "integer"
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "author": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+                },
+                "author_id": {
+                  "type": "integer"
+                },
+                "thread": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Thread"
+                },
+                "thread_id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "AuthorizationHeader": {
         "type": "http",

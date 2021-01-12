@@ -20,18 +20,18 @@ import (
 // @Description Forum API implemented using golang
 // @ContactName Naufal
 // @ContactEmail primayoriko@gmail.com
-// @ContactURL http://primayoriko.github.io
+// @ContactURL https://primayoriko.github.io
 // @LicenseName MIT
 // @LicenseURL https://en.wikipedia.org/wiki/MIT_License
 // @Server http:/localhost:8008 LocalServer
 // @Security AuthorizationHeader read write
-// @SecurityScheme AuthorizationHeader http bearer Input your token
+// @SecurityScheme Authorization http bearer Input your token
 func Run() {
 	logger.NewLogger()
 	r := mux.NewRouter()
 
 	fs := http.FileServer(http.Dir("./docs/swaggerui/"))
-	r.PathPrefix("/docs").Handler(http.StripPrefix("/docs", fs))
+	r.PathPrefix("/docs/").Handler(http.StripPrefix("/docs/", fs))
 
 	routers.AddUserRoutes(r)
 	routers.AddThreadRoutes(r)

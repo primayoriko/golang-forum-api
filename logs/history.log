@@ -78,3 +78,6 @@
 {"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:28:23+07:00"}
 {"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:28:49+07:00"}
 {"level":"info","msg":"POST /signin, response 200 OK","time":"2021-01-12T12:29:22+07:00"}
+{"level":"info","msg":"GET /threads, response 200 OK","time":"2021-01-12T16:04:09+07:00"}
+{"level":"info","msg":"GET /threads?page=1\u0026pagesize=1, response 200 OK","time":"2021-01-12T16:04:26+07:00"}
+{"level":"info","msg":"GET /threads?pagesize=1, response 200 OK","time":"2021-01-12T16:04:32+07:00"}
