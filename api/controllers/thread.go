@@ -164,6 +164,12 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if thread.Topic == "" || thread.Title == "" {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("must specify title and topic with non-empty string")), nil)
+		return
+	}
+
 	if thread.CreatorID != context.Get(r, "id").(uint32) && thread.CreatorID != 0 {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do the action as this user")), nil)
@@ -224,10 +230,15 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if dbThread.CreatorID != userID ||
-		(thread.CreatorID != userID && thread.CreatorID != 0) {
+	if dbThread.CreatorID != userID {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do specified action as this user")), nil)
+		return
+	}
+
+	if thread.CreatorID != userID && thread.CreatorID != 0 {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("can't change creator id")), nil)
 		return
 	}
 
@@ -245,8 +256,14 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := db.Model(&dbThread).Updates(dbThread).Error; err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
+
 	utils.JSONResponseWriter(&w, http.StatusNoContent,
-		*(models.NewErrorResponse(err.Error())), nil)
+		nil, nil)
 	return
 }
 

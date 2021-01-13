@@ -185,32 +185,32 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:8008/threads/?page=1&pagesize=1",
+							"raw": "localhost:8008/threads?userid=2",
 							"host": [
 								"localhost"
 							],
 							"port": "8008",
 							"path": [
-								"threads",
-								""
+								"threads"
 							],
 							"query": [
 								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "pagesize",
-									"value": "1"
-								},
-								{
 									"key": "userid",
-									"value": "1",
-									"disabled": true
+									"value": "2"
 								},
 								{
 									"key": "username",
 									"value": "naufal",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "1",
 									"disabled": true
 								}
 							]
@@ -268,6 +268,61 @@
 				{
 					"name": "CreateThread",
 					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"lifestyle\",\n    \"title\": \"fitness\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8008/threads",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"threads"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateThread",
+					"request": {
 						"method": "PATCH",
 						"header": [
 							{
@@ -278,7 +333,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 2,\n    \"topic\": \"lifestyle2\"\n}",
+							"raw": "{\n    \"id\":    1,\n    \"topic\": \"lifestyl213e\",\n    \"title\": \"fitnes213s\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -371,7 +426,216 @@
 		},
 		{
 			"name": "Posts",
-			"item": []
+			"item": [
+				{
+					"name": "GetPosts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"url": {
+							"raw": "localhost:8008/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "naufal",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "is",
+									"disabled": true
+								},
+								{
+									"key": "threadid",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"hehe\",\n    \"thread_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8008/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePost",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":    1,\n    \"content\": \"lifestyl213e\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8008/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"url": {
+							"raw": "localhost:8008/posts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"posts",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

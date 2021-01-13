@@ -122,6 +122,18 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if post.ThreadID == 0 {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("must specify thread id")), nil)
+		return
+	}
+
+	if post.Content == "" {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("must specify content with non-empty string")), nil)
+		return
+	}
+
 	if post.AuthorID != context.Get(r, "id").(uint32) && post.AuthorID != 0 {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do the action as this user")), nil)
@@ -150,16 +162,16 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 // UpdatePost will update an existing Post
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id").(uint32)
-	var thread, dbPost models.Post
-	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
+	var post, dbPost models.Post
+	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if thread.ID == 0 {
+	if post.ID == 0 {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("need thread id")), nil)
+			*(models.NewErrorResponse("must specify thread id")), nil)
 		return
 	}
 
@@ -170,7 +182,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Where("id = ?", thread.ID).First(&dbPost).Error; err != nil {
+	if err := db.Where("id = ?", post.ID).First(&dbPost).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
 				*(models.NewErrorResponse("can't find specified thread")), nil)
@@ -182,29 +194,31 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if dbPost.AuthorID != userID ||
-		(thread.AuthorID != userID && thread.AuthorID != 0) {
+	if dbPost.AuthorID != userID {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do specified action as this user")), nil)
 		return
 	}
 
-	// thread.AuthorID = userID
-	// if thread.Topic != "" {
-	// 	dbPost.Topic = thread.Topic
-	// }
-	// if thread.Title != "" {
-	// 	dbPost.Title = thread.Title
-	// }
+	if post.AuthorID != userID && post.AuthorID != 0 ||
+		post.ThreadID != dbPost.ThreadID && post.ThreadID != 0 {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("can't change author/thread id")), nil)
+		return
+	}
 
-	if err := db.Save(&dbPost).Error; err != nil {
+	if post.Content != "" {
+		dbPost.Content = post.Content
+	}
+
+	if err := db.Model(&dbPost).Updates(dbPost).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusNoContent,
-		*(models.NewErrorResponse(err.Error())), nil)
+		nil, nil)
 	return
 }
 
@@ -228,11 +242,11 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var thread models.Post
-	if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
+	var post models.Post
+	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-				*(models.NewErrorResponse("can't find specified thread")), nil)
+				*(models.NewErrorResponse("can't find specified post")), nil)
 			return
 		}
 
@@ -242,13 +256,13 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if thread.AuthorID != userID.(uint32) {
+	if post.AuthorID != userID.(uint32) {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do the action as this user")), nil)
 		return
 	}
 
-	if err := db.Delete(&thread, id).Error; err != nil {
+	if err := db.Delete(&post, id).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 
@@ -256,6 +270,6 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		thread, nil)
+		post, nil)
 	return
 }

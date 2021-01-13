@@ -197,6 +197,20 @@ import (
 // 			End()
 // 	})
 
+// 	t.Run("Fail-EmptyTopicOrTitle", func(t *testing.T) {
+// 		apitest.New().
+// 			Handler(r).
+// 			Post("/threads").
+// 			Header("Authorization", token).
+// 			JSON(map[string]interface{}{
+// 				"id":    12,
+// 				"topic": "lifestyle",
+// 			}).
+// 			Expect(t).
+// 			Status(http.StatusBadRequest).
+// 			End()
+// 	})
+
 // 	t.Run("Fail-FilledID", func(t *testing.T) {
 // 		apitest.New().
 // 			Handler(r).

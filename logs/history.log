@@ -108,3 +108,15 @@
 {"level":"info","msg":"GET /posts?page=1\u0026pagesize=2\u0026threadid=1, response 200 OK","time":"2021-01-13T10:30:51+07:00"}
 {"level":"info","msg":"GET /posts?page=1\u0026pagesize=2\u0026threadid=1, response 200 OK","time":"2021-01-13T10:34:26+07:00"}
 {"level":"info","msg":"GET /posts, response 200 OK","time":"2021-01-13T10:34:45+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T10:39:24+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T10:39:33+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T10:40:46+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T10:40:50+07:00"}
+{"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T10:42:19+07:00"}
+{"level":"info","msg":"POST /threads, response 400 Bad Request","time":"2021-01-13T10:46:44+07:00"}
+{"level":"info","msg":"POST /posts, response 201 Created","time":"2021-01-13T10:47:11+07:00"}
+{"level":"info","msg":"POST /posts, response 500 Internal Server Error","time":"2021-01-13T10:47:15+07:00"}
+{"level":"info","msg":"DELETE /posts/1, response 200 OK","time":"2021-01-13T11:33:54+07:00"}
+{"level":"info","msg":"DELETE /posts/2, response 403 Forbidden","time":"2021-01-13T11:33:59+07:00"}
+{"level":"info","msg":"PATCH /posts, response 204 No Content","time":"2021-01-13T11:58:44+07:00"}
+{"level":"info","msg":"PATCH /posts, response 400 Bad Request","time":"2021-01-13T11:59:08+07:00"}
