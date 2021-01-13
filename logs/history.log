@@ -128,3 +128,4 @@
 {"level":"info","msg":"GET /posts?username=hasan, response 200 OK","time":"2021-01-13T18:07:06+07:00"}
 {"level":"info","msg":"PATCH /threads, response 404 Not Found","time":"2021-01-13T18:25:31+07:00"}
 {"level":"info","msg":"PATCH /threads, response 400 Bad Request","time":"2021-01-13T18:28:04+07:00"}
+{"level":"info","msg":"PATCH /threads, response 204 No Content","time":"2021-01-13T20:01:19+07:00"}

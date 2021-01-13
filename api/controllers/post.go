@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	// "fmt"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -109,28 +108,17 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 
 // CreatePost will make a new post on a specific post
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	var post models.Post //CreateRequest
-	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
+	var postReq models.PostCreateRequest
+	if err := json.NewDecoder(r.Body).Decode(&postReq); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if post.ID != 0 {
+	var post models.Post
+	if err := postReq.InjectToModel(&post); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("can't specify id since it's automatically generated")), nil)
-		return
-	}
-
-	if post.ThreadID == 0 {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("must specify thread id")), nil)
-		return
-	}
-
-	if post.Content == "" {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("must specify content with non-empty string")), nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -162,16 +150,18 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 // UpdatePost will update an existing Post
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id").(uint32)
-	var post, dbPost models.Post
-	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
+
+	var postReq models.PostUpdateRequest
+	if err := json.NewDecoder(r.Body).Decode(&postReq); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if post.ID == 0 {
+	var post, dbPost models.Post
+	if err := postReq.InjectToModel(&post); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("must specify thread id")), nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -200,18 +190,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if post.AuthorID != userID && post.AuthorID != 0 ||
-		post.ThreadID != dbPost.ThreadID && post.ThreadID != 0 {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("can't change author/thread id")), nil)
-		return
-	}
-
-	if post.Content != "" {
-		dbPost.Content = post.Content
-	}
-
-	if err := db.Model(&dbPost).Updates(dbPost).Error; err != nil {
+	if err := db.Model(&post).Updates(post).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return

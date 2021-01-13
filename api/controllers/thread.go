@@ -227,14 +227,7 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if thread.Topic != "" {
-		dbThread.Topic = thread.Topic
-	}
-	if thread.Title != "" {
-		dbThread.Title = thread.Title
-	}
-
-	if err := db.Model(&thread).Updates(dbThread).Error; err != nil {
+	if err := db.Model(&thread).Updates(thread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return

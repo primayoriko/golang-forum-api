@@ -175,36 +175,6 @@ func Test_CreatePost(t *testing.T) {
 			Status(http.StatusBadRequest).
 			End()
 	})
-
-	t.Run("Fail-FilledID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/posts").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"id":        12,
-				"thread_id": 1,
-				"content":   "i want to fly",
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
-			End()
-	})
-
-	t.Run("Fail-FilledInvalidAuthorID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/posts").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"author_id": 2,
-				"thread_id": 1,
-				"content":   "i want to fly",
-			}).
-			Expect(t).
-			Status(http.StatusForbidden).
-			End()
-	})
 }
 
 func Test_UpdatePost(t *testing.T) {
@@ -279,21 +249,6 @@ func Test_UpdatePost(t *testing.T) {
 			}).
 			Expect(t).
 			Status(http.StatusNotFound).
-			End()
-	})
-
-	t.Run("Fail-CantChangeAuthorID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Patch("/posts").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"id":        1,
-				"content":   "i want to fly",
-				"author_id": 2,
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
 			End()
 	})
 }
