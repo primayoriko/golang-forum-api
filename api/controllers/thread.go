@@ -151,28 +151,17 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 
 // CreateThread will make a new thread
 func CreateThread(w http.ResponseWriter, r *http.Request) {
-	var thread models.Thread //CreateRequest
-	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
+	var threadReq models.ThreadCreateRequest
+	if err := json.NewDecoder(r.Body).Decode(&threadReq); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if thread.ID != 0 {
+	var thread models.Thread
+	if err := threadReq.InjectToModel(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("can't specify id since it's automatically generated")), nil)
-		return
-	}
-
-	if thread.Topic == "" || thread.Title == "" {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("must specify title and topic with non-empty string")), nil)
-		return
-	}
-
-	if thread.CreatorID != context.Get(r, "id").(uint32) && thread.CreatorID != 0 {
-		utils.JSONResponseWriter(&w, http.StatusForbidden,
-			*(models.NewErrorResponse("can't do the action as this user")), nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -198,16 +187,18 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 // UpdateThread will update an existing Thread
 func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id").(uint32)
-	var thread, dbThread models.Thread
-	if err := json.NewDecoder(r.Body).Decode(&thread); err != nil {
+
+	var threadReq models.ThreadUpdateRequest
+	if err := json.NewDecoder(r.Body).Decode(&threadReq); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
-	if thread.ID == 0 {
+	var thread, dbThread models.Thread
+	if err := threadReq.InjectToModel(&thread); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("need thread id")), nil)
+			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
 
@@ -236,13 +227,6 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if thread.CreatorID != userID && thread.CreatorID != 0 {
-		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-			*(models.NewErrorResponse("can't change creator id")), nil)
-		return
-	}
-
-	// thread.CreatorID = userID
 	if thread.Topic != "" {
 		dbThread.Topic = thread.Topic
 	}
@@ -250,13 +234,7 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 		dbThread.Title = thread.Title
 	}
 
-	if err := db.Save(&dbThread).Error; err != nil {
-		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-			*(models.NewErrorResponse(err.Error())), nil)
-		return
-	}
-
-	if err := db.Model(&dbThread).Updates(dbThread).Error; err != nil {
+	if err := db.Model(&thread).Updates(dbThread).Error; err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return

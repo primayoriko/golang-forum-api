@@ -210,36 +210,6 @@ func Test_CreateThread(t *testing.T) {
 			Status(http.StatusBadRequest).
 			End()
 	})
-
-	t.Run("Fail-FilledID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/threads").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"id":    12,
-				"topic": "lifestyle",
-				"title": "fitness",
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
-			End()
-	})
-
-	t.Run("Fail-FilledInvalidCreatorID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/threads").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"creator_id": 2,
-				"topic":      "lifestyle",
-				"title":      "fitness",
-			}).
-			Expect(t).
-			Status(http.StatusForbidden).
-			End()
-	})
 }
 
 func Test_UpdateThread(t *testing.T) {
@@ -318,22 +288,6 @@ func Test_UpdateThread(t *testing.T) {
 			}).
 			Expect(t).
 			Status(http.StatusNotFound).
-			End()
-	})
-
-	t.Run("Fail-CantChangeCreatorID", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Patch("/threads").
-			Header("Authorization", token).
-			JSON(map[string]interface{}{
-				"id":         1,
-				"topic":      "lifestyle",
-				"title":      "fitness",
-				"creator_id": 2,
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
 			End()
 	})
 }
