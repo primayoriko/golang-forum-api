@@ -24,8 +24,8 @@ func AddThreadRoutes(router *mux.Router) error {
 			[]utils.Middleware{
 				middlewares.CheckJWT,
 				middlewares.Log,
-			}, controllers.GetThreadsList)).
-		Methods("GET").Name("GetThreadsList")
+			}, controllers.GetThreads)).
+		Methods("GET").Name("GetThreads")
 
 	threadRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(

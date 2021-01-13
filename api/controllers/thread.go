@@ -15,14 +15,14 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-// GetThreadsList will fetch all threads list of specific criteria
+// GetThreads will fetch all threads list of specific criteria
 // @Title Get Thread List.
 // @Description Get all related thread of specific criteria.
 // @Param  groupID  path  int  true  "Id of a specific group."
 // @Success  200  array  models.Thread  "Thread JSON"
 // @Resource threads
 // @Route /threads [get]
-func GetThreadsList(w http.ResponseWriter, r *http.Request) {
+func GetThreads(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	topic := r.FormValue("topic")
 	title := r.FormValue("title")

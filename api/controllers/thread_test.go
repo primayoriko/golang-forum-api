@@ -16,7 +16,7 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-func Test_GetThreadsList(t *testing.T) {
+func Test_GetThreads(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
@@ -29,7 +29,7 @@ func Test_GetThreadsList(t *testing.T) {
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{
 				middlewares.CheckJWT,
-			}, controllers.GetThreadsList)).
+			}, controllers.GetThreads)).
 		Methods("GET")
 
 	ts := httptest.NewServer(r)

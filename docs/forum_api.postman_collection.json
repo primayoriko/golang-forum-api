@@ -333,7 +333,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":    1,\n    \"topic\": \"lifestyl213e\",\n    \"title\": \"fitnes213s\"\n}",
+							"raw": "{\n    \"id\":         1,\n    \"topic\":      \"lifestylek\",\n    \"title\":      \"fitnessk\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -439,7 +439,7 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:8008/posts",
+							"raw": "localhost:8008/posts?username=hasan&search=is",
 							"host": [
 								"localhost"
 							],
@@ -450,12 +450,11 @@
 							"query": [
 								{
 									"key": "username",
-									"value": "naufal",
-									"disabled": true
+									"value": "hasan"
 								},
 								{
 									"key": "page",
-									"value": "1",
+									"value": "2",
 									"disabled": true
 								},
 								{
@@ -465,12 +464,16 @@
 								},
 								{
 									"key": "search",
-									"value": "is",
-									"disabled": true
+									"value": "is"
 								},
 								{
 									"key": "threadid",
 									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "2",
 									"disabled": true
 								}
 							]
@@ -546,7 +549,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":    1,\n    \"content\": \"lifestyl213e\"\n}",
+							"raw": "{\n    \"id\":    1,\n    \"content\": \"lifest3e\",\n    \"author_id\": 2\n}",
 							"options": {
 								"raw": {
 									"language": "json"

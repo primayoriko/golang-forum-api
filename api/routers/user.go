@@ -14,39 +14,48 @@ func AddUserRoutes(router *mux.Router) error {
 	router.HandleFunc("/signup",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.Log,
-		}, controllers.SignUp)).Methods("POST")
+		}, controllers.SignUp)).
+		Methods("POST").Name("SignUp")
+
 	router.HandleFunc("/signin",
 		utils.ChainHandlerFuncs([]utils.Middleware{
 			middlewares.Log,
-		}, controllers.SignIn)).Methods("POST")
+		}, controllers.SignIn)).
+		Methods("POST").Name("SignIn")
 
 	userRouter := router.PathPrefix("/users").Subrouter()
 	// userRouter.HandleFunc("/{username:[a-zA-Z0-9]+}",
-	userRouter.HandleFunc("/{username}",
-		utils.ChainHandlerFuncs([]utils.Middleware{
-			middlewares.CheckJWT,
-			middlewares.Log,
-		}, controllers.GetUsers)).Methods("GET")
+	userRouter.Path("/{id}").
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.GetUser)).
+		Methods("GET").Name("GetUser")
 
 	userRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{
 				middlewares.CheckJWT,
 				middlewares.Log,
-			}, controllers.GetUsers)).Methods("GET")
+			}, controllers.GetUsers)).
+		Methods("GET").Name("GetUsers")
 
 	userRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{
 				middlewares.CheckJWT,
 				middlewares.Log,
-			}, controllers.UpdateUser)).Methods("PATCH")
+			}, controllers.UpdateUser)).
+		Methods("PATCH").Name("UpdateUser")
 
-	userRouter.HandleFunc("/",
-		utils.ChainHandlerFuncs([]utils.Middleware{
-			middlewares.CheckJWT,
-			middlewares.Log,
-		}, controllers.DeleteUser)).Methods("DELETE")
+	userRouter.Path("/{id}").
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.DeleteUser)).
+		Methods("DELETE").Name("DeleteUser")
 
 	return nil
 }
