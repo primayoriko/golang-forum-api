@@ -52,7 +52,7 @@ import (
 // 			Handler(r).
 // 			Get("/threads").
 // 			Header("Authorization", token).
-// 			Query("page", "1").
+// 			Query("page", "2").
 // 			Query("pagesize", "1").
 // 			Expect(t).
 // 			Status(http.StatusOK).

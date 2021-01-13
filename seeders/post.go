@@ -7,10 +7,10 @@ import (
 
 var posts []models.Post = []models.Post{
 	models.Post{AuthorID: 1, ThreadID: 2, Content: "Good! This is the start"},
-	models.Post{AuthorID: 2, ThreadID: 3, Content: "Good! This is the start"},
+	models.Post{AuthorID: 2, ThreadID: 3, Content: "Bad! too Bad"},
 	models.Post{AuthorID: 3, ThreadID: 3, Content: "Good! This is the start"},
-	models.Post{AuthorID: 2, ThreadID: 2, Content: "Good! This is the start"},
-	models.Post{AuthorID: 2, ThreadID: 1, Content: "Good! This is the start"},
+	models.Post{AuthorID: 2, ThreadID: 2, Content: "Mayday! Mayday!"},
+	models.Post{AuthorID: 2, ThreadID: 1, Content: "This is beginning my friend..."},
 }
 
 // SeedPosts is function for seed Post data

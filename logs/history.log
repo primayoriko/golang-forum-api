@@ -90,3 +90,10 @@
 {"level":"info","msg":"POST /threads, response 403 Forbidden","time":"2021-01-13T00:37:27+07:00"}
 {"level":"info","msg":"POST /threads, response 201 Created","time":"2021-01-13T00:39:28+07:00"}
 {"level":"info","msg":"PATCH /threads, response 500 Internal Server Error","time":"2021-01-13T01:05:32+07:00"}
+{"level":"info","msg":"GET /posts, response 500 Internal Server Error","time":"2021-01-13T09:01:18+07:00"}
+{"level":"info","msg":"GET /posts, response 200 OK","time":"2021-01-13T09:02:42+07:00"}
+{"level":"info","msg":"GET /posts?search=is, response 200 OK","time":"2021-01-13T09:11:13+07:00"}
+{"level":"info","msg":"GET /posts?search=is, response 200 OK","time":"2021-01-13T09:15:32+07:00"}
+{"level":"info","msg":"GET /posts?search=is, response 200 OK","time":"2021-01-13T09:23:14+07:00"}
+{"level":"info","msg":"GET /posts, response 200 OK","time":"2021-01-13T09:23:33+07:00"}
+{"level":"info","msg":"GET /posts?page=1\u0026pagesize=2, response 200 OK","time":"2021-01-13T09:23:49+07:00"}

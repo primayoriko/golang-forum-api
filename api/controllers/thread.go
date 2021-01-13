@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	validate "github.com/asaskevich/govalidator"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
@@ -31,9 +30,12 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	pageNumStr := r.FormValue("page")
 	pageSizeStr := r.FormValue("pagesize")
 
-	// fmt.Printf("%s, %s, %s, %s\n", username, userIDStr, pageNumStr, pageSizeStr)
-
-	if !validate.IsInt(userIDStr) || !validate.IsInt(pageNumStr) || !validate.IsInt(pageSizeStr) {
+	// if !validate.IsInt(userIDStr) || !validate.IsInt(pageNumStr) || !validate.IsInt(pageSizeStr) {
+	// 	utils.JSONResponseWriter(&w, http.StatusBadRequest,
+	// 		*(models.NewErrorResponse("bad query value")), nil)
+	// 	return
+	// }
+	if !utils.IsInteger(userIDStr, pageNumStr, pageSizeStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("bad query value")), nil)
 		return
@@ -42,11 +44,24 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	userID64, _ := strconv.ParseUint(userIDStr, 10, 32)
 	userID := uint32(userID64)
 	pageNum, _ := strconv.Atoi(r.FormValue("page"))
+	pageNum--
 	pageSize, _ := strconv.Atoi(r.FormValue("pagesize"))
 	offset := pageNum * pageSize
 
+	// if !validate.IsPositive(float64(userID64)) ||
+	// 	!validate.IsPositive(float64(pageNum)) || !validate.IsPositive(float64(pageSize)) {
+	// 	utils.JSONResponseWriter(&w, http.StatusBadRequest,
+	// 		*(models.NewErrorResponse("bad query value")), nil)
+	// 	return
+	// }
+	if !utils.IsPositiveInteger(int(userID64), pageNum, pageSize) {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("bad query value")), nil)
+		return
+	}
+
 	db, err := database.ConnectDB()
-	if err != nil || db == nil {
+	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse("failed to connect db")), nil)
 		return
@@ -103,7 +118,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 func GetThread(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 
-	if idStr == "" || !validate.IsInt(idStr) {
+	if idStr == "" || !utils.IsInteger(idStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid id format")), nil)
 		return
@@ -251,7 +266,7 @@ func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id")
 	idStr := mux.Vars(r)["id"]
 
-	if idStr == "" || !validate.IsInt(idStr) {
+	if idStr == "" || !utils.IsInteger(idStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid id format")), nil)
 		return
