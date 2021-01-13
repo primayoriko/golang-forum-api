@@ -120,3 +120,11 @@
 {"level":"info","msg":"DELETE /posts/2, response 403 Forbidden","time":"2021-01-13T11:33:59+07:00"}
 {"level":"info","msg":"PATCH /posts, response 204 No Content","time":"2021-01-13T11:58:44+07:00"}
 {"level":"info","msg":"PATCH /posts, response 400 Bad Request","time":"2021-01-13T11:59:08+07:00"}
+{"level":"info","msg":"GET /posts, response 200 OK","time":"2021-01-13T12:53:11+07:00"}
+{"level":"info","msg":"GET /posts?page=2\u0026pagesize=2, response 200 OK","time":"2021-01-13T12:56:33+07:00"}
+{"level":"info","msg":"GET /posts?userid=2, response 200 OK","time":"2021-01-13T12:57:49+07:00"}
+{"level":"info","msg":"GET /posts?username=naufal, response 200 OK","time":"2021-01-13T12:59:36+07:00"}
+{"level":"info","msg":"GET /posts?username=hasan\u0026search=is, response 200 OK","time":"2021-01-13T18:06:52+07:00"}
+{"level":"info","msg":"GET /posts?username=hasan, response 200 OK","time":"2021-01-13T18:07:06+07:00"}
+{"level":"info","msg":"PATCH /threads, response 404 Not Found","time":"2021-01-13T18:25:31+07:00"}
+{"level":"info","msg":"PATCH /threads, response 400 Bad Request","time":"2021-01-13T18:28:04+07:00"}
