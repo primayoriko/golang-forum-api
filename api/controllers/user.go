@@ -3,15 +3,20 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
+	// _"github.com/gorilla/context"
+	"github.com/gorilla/mux"
+	"gorm.io/gorm"
+
 	"gitlab.com/hydra/forum-api/api/auth"
 	"gitlab.com/hydra/forum-api/api/database"
 	"gitlab.com/hydra/forum-api/api/models"
 	"gitlab.com/hydra/forum-api/api/utils"
-	"gorm.io/gorm"
 )
 
 // SignUp is function for create new User
@@ -102,133 +107,130 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// // GetUsers is method for getting data for specified user(s) based on some criteria
-// func GetUsers(w http.ResponseWriter, r *http.Request) {
-// 	username := r.FormValue("username")
-// 	topic := r.FormValue("topic")
-// 	title := r.FormValue("title")
-// 	userIDStr := r.FormValue("userid")
-// 	pageNumStr := r.FormValue("page")
-// 	pageSizeStr := r.FormValue("pagesize")
+// GetUsers is method for getting data for specified user(s) based on some criteria
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	pageNumStr := r.FormValue("page")
+	pageSizeStr := r.FormValue("pagesize")
+	minIDStr := r.FormValue("minid")
+	maxIDStr := r.FormValue("maxid")
 
-// 	if !utils.IsInteger(userIDStr, pageNumStr, pageSizeStr) {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("bad query value")), nil)
-// 		return
-// 	}
+	if !utils.IsInteger(minIDStr, maxIDStr, pageNumStr, pageSizeStr) {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("bad query value")), nil)
+		return
+	}
 
-// 	userID64, _ := strconv.ParseUint(userIDStr, 10, 32)
-// 	userID := uint32(userID64)
-// 	pageNum, _ := strconv.Atoi(r.FormValue("page"))
-// 	pageNum--
-// 	pageSize, _ := strconv.Atoi(r.FormValue("pagesize"))
-// 	offset := pageNum * pageSize
+	minID64, _ := strconv.ParseUint(minIDStr, 10, 32)
+	maxID64, _ := strconv.ParseUint(maxIDStr, 10, 32)
+	minID := uint32(minID64)
+	maxID := uint32(maxID64)
+	pageNum, _ := strconv.Atoi(r.FormValue("page"))
+	pageNum--
+	pageSize, _ := strconv.Atoi(r.FormValue("pagesize"))
+	offset := pageNum * pageSize
 
-// 	if !utils.IsNonNegative(pageNum+1, pageSize) {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("bad query value")), nil)
-// 		return
-// 	}
+	if !utils.IsNonNegative(int(minID),
+		int(maxID), pageNum+1, pageSize) {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("bad query value")), nil)
+		return
+	}
 
-// 	db, err := database.ConnectDB()
-// 	if err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse("failed to connect db")), nil)
-// 		return
-// 	}
+	db, err := database.ConnectDB()
+	if err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse("failed to connect db")), nil)
+		return
+	}
 
-// 	var user models.User
-// 	if username != "" {
-// 		if err := db.Where("username = ?", username).First(&user).Error; err != nil {
-// 			if errors.Is(err, gorm.ErrRecordNotFound) {
-// 				utils.JSONResponseWriter(&w, http.StatusNotFound,
-// 					*(models.NewErrorResponse("can't find any users")), nil)
-// 				return
-// 			}
+	if username != "" {
+		username = fmt.Sprintf("%%%s%%", username)
+	} else {
+		username = "%"
+	}
 
-// 			utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 				*(models.NewErrorResponse(err.Error())), nil)
-// 			return
-// 		}
+	if maxID == 0 {
+		maxID = 2147483647*2 - 2
+	}
 
-// 		if userID != 0 && userID != user.ID {
-// 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-// 				*(models.NewErrorResponse("can't find any users")), nil)
-// 			return
-// 		}
-// 	}
+	var users []models.User
+	err = db.Model(&models.User{}).
+		Where("username LIKE ? AND id BETWEEN ? AND ?",
+			username, minID, maxID).
+		Offset(offset).
+		Limit(pageSize).
+		Find(&users).Error
 
-// 	var users []models.User
-// 	if userID != 0 || user.ID != 0 || topic != "" || title != "" {
-// 		err = db.Model(&models.User{}).
-// 			Where("creator_id = ? OR creator_id = ? OR topic =  ? OR title = ?",
-// 				userID, user.ID, topic, title).
-// 			Offset(offset).
-// 			Limit(pageSize).
-// 			Find(&users).Error
-// 	} else {
-// 		err = db.Model(&models.User{}).
-// 			Offset(offset).
-// 			Limit(pageSize).
-// 			Find(&users).Error
-// 	}
+	if err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 	if err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-// 		return
-// 	}
+	var usersRes []models.UserResponse
+	var userRes models.UserResponse
+	for _, obj := range users {
+		if err := obj.InjectToResponse(&userRes); err != nil {
+			utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+				*(models.NewErrorResponse(err.Error())), nil)
+			return
+		}
 
-// 	utils.JSONResponseWriter(&w, http.StatusOK,
-// 		users, nil)
-// 	return
-// }
+		usersRes = append(usersRes, userRes)
+	}
 
-// // GetUser is method for getting data for specified user(s) based on some criteria
-// func GetUser(w http.ResponseWriter, r *http.Request) {
-// 	idStr := mux.Vars(r)["id"]
+	utils.JSONResponseWriter(&w, http.StatusOK,
+		usersRes, nil)
+	return
+}
 
-// 	if idStr == "" || !utils.IsInteger(idStr) {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("invalid id format")), nil)
-// 		return
-// 	}
+// GetUser is method for getting data for specified user(s) based on some criteria
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	idStr := mux.Vars(r)["id"]
 
-// 	id, _ := strconv.ParseUint(idStr, 10, 64)
+	if idStr == "" || !utils.IsInteger(idStr) {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("invalid id format")), nil)
+		return
+	}
 
-// 	// fmt.Printf("%s %d", idStr, id)
+	id64, _ := strconv.ParseUint(idStr, 10, 64)
+	id := uint32(id64)
 
-// 	db, err := database.ConnectDB()
-// 	if err != nil || db == nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse("failed to connect db")), nil)
-// 		return
-// 	}
+	// fmt.Printf("%s %d", idStr, id)
 
-// 	var user models.User
-// 	// db.Preload("posts").
-// 	// 	Where("id = ?", id).
-// 	// 	First(&user)
+	db, err := database.ConnectDB()
+	if err != nil || db == nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse("failed to connect db")), nil)
+		return
+	}
 
-// 	err = db.Where("id = ?", id).
-// 		First(&user).Error
+	var user models.User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.JSONResponseWriter(&w, http.StatusNotFound,
+				*(models.NewErrorResponse("can't find specified user")), nil)
+			return
+		}
 
-// 	if err != nil {
-// 		if errors.Is(err, gorm.ErrRecordNotFound) {
-// 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-// 				*(models.NewErrorResponse("can't find specified user")), nil)
-// 			return
-// 		}
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-// 		return
-// 	}
+	var userRes models.UserResponse
+	if err := user.InjectToResponse(&userRes); err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 	utils.JSONResponseWriter(&w, http.StatusOK,
-// 		user, nil)
-// 	return
-// }
+	utils.JSONResponseWriter(&w, http.StatusOK,
+		userRes, nil)
+	return
+}
 
 // // UpdateUser is for change it's own user data
 // func UpdateUser(w http.ResponseWriter, r *http.Request) {

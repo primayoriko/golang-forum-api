@@ -90,13 +90,13 @@ func Test_GetPost(t *testing.T) {
 			End()
 	})
 
-	t.Run("Success-Search", func(t *testing.T) {
+	t.Run("Success-SearchContent", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
 			Get("/posts").
 			Header("Authorization", token).
 			Query("username", "hasan").
-			Query("search", "is").
+			Query("content", "is").
 			Expect(t).
 			Status(http.StatusOK).
 			Assert(jsonpath.Len("$", 1)).

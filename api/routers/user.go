@@ -23,23 +23,24 @@ func AddUserRoutes(router *mux.Router) error {
 		}, controllers.SignIn)).
 		Methods("POST").Name("SignIn")
 
-	// userRouter := router.PathPrefix("/users").Subrouter()
-	// // userRouter.HandleFunc("/{username:[a-zA-Z0-9]+}",
-	// userRouter.Path("/{id}").
-	// 	HandlerFunc(utils.ChainHandlerFuncs(
-	// 		[]utils.Middleware{
-	// 			middlewares.CheckJWT,
-	// 			middlewares.Log,
-	// 		}, controllers.GetUser)).
-	// 	Methods("GET").Name("GetUser")
+	userRouter := router.PathPrefix("/users").Subrouter()
+	userRouter.Path("/{id}").
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.GetUser)).
+		Methods("GET").Name("GetUser")
 
-	// userRouter.Queries().
-	// 	HandlerFunc(utils.ChainHandlerFuncs(
-	// 		[]utils.Middleware{
-	// 			middlewares.CheckJWT,
-	// 			middlewares.Log,
-	// 		}, controllers.GetUsers)).
-	// 	Methods("GET").Name("GetUsers")
+	userRouter.Queries().
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.GetUsers)).
+		Methods("GET").Name("GetUsers")
+
+	// userRouter.HandleFunc("/{username:[a-zA-Z0-9]+}",
 
 	// userRouter.Queries().
 	// 	HandlerFunc(utils.ChainHandlerFuncs(

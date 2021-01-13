@@ -13,3 +13,27 @@ type User struct {
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
+
+// UserResponse is struct that represent field that could be shown on response
+type UserResponse struct {
+	ID        uint32    `json:"id"`
+	Username  string    `json:"username"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"registered_at"`
+}
+
+// UserUpdateRequest is struct that represent field that could be included on request
+type UserUpdateRequest struct {
+	ID       uint32 `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// InjectToResponse used to inject model into corresponding response structure
+func (u *User) InjectToResponse(target *UserResponse) error {
+	target.ID = u.ID
+	target.Username = u.Username
+	target.Email = u.Email
+	target.CreatedAt = u.CreatedAt
+	return nil
+}

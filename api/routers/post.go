@@ -11,7 +11,6 @@ import (
 // AddPostRoutes is function to add subroute for /posts prefixes path
 func AddPostRoutes(router *mux.Router) error {
 	postRouter := router.PathPrefix("/posts").Subrouter()
-
 	postRouter.Queries().
 		HandlerFunc(utils.ChainHandlerFuncs(
 			[]utils.Middleware{

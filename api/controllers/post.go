@@ -18,7 +18,7 @@ import (
 // GetPosts will fetch all posts of a specified criteria
 func GetPosts(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
-	search := r.FormValue("search")
+	content := r.FormValue("content")
 	userIDStr := r.FormValue("userid")
 	threadIDStr := r.FormValue("threadid")
 	pageNumStr := r.FormValue("page")
@@ -73,23 +73,23 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if search != "" {
-		search = fmt.Sprintf("%%%s%%", search)
+	if content != "" {
+		content = fmt.Sprintf("%%%s%%", content)
 	} else {
-		search = "%"
+		content = "%"
 	}
 
 	var posts []models.Post
 	if userID != 0 || user.ID != 0 || threadID != 0 {
 		err = db.Model(&models.Post{}).
 			Where("(author_id = ? OR author_id = ? OR thread_id = ?) AND content LIKE ?",
-				userID, user.ID, threadID, search).
+				userID, user.ID, threadID, content).
 			Offset(offset).
 			Limit(pageSize).
 			Find(&posts).Error
 	} else {
 		err = db.Model(&models.Post{}).
-			Where("content LIKE ?", search).
+			Where("content LIKE ?", content).
 			Offset(offset).
 			Limit(pageSize).
 			Find(&posts).Error

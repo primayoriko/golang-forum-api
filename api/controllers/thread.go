@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -77,16 +78,23 @@ func GetThreads(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if title != "" {
+		title = fmt.Sprintf("%%%s%%", title)
+	} else {
+		title = "%"
+	}
+
 	var threads []models.Thread
-	if userID != 0 || user.ID != 0 || topic != "" || title != "" {
+	if userID != 0 || user.ID != 0 || topic != "" {
 		err = db.Model(&models.Thread{}).
-			Where("creator_id = ? OR creator_id = ? OR topic =  ? OR title = ?",
+			Where("(creator_id = ? OR creator_id = ? OR topic =  ?) AND title LIKE ?",
 				userID, user.ID, topic, title).
 			Offset(offset).
 			Limit(pageSize).
 			Find(&threads).Error
 	} else {
 		err = db.Model(&models.Thread{}).
+			Where("title LIKE ?", title).
 			Offset(offset).
 			Limit(pageSize).
 			Find(&threads).Error
@@ -128,9 +136,7 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 	// db.Preload("posts").
 	// 	Where("id = ?", id).
 	// 	First(&thread)
-
-	err = db.Where("id = ?", id).
-		First(&thread).Error
+	err = db.Where("id = ?", id).First(&thread).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
