@@ -4,7 +4,7 @@ import (
 	validator "github.com/asaskevich/govalidator"
 )
 
-// IsInteger to validate if all value is integer from string type values
+// IsInteger is a func to validate if all value is integer from string type values
 func IsInteger(values ...string) bool {
 	for _, value := range values {
 		if !validator.IsInt(value) {
@@ -15,10 +15,10 @@ func IsInteger(values ...string) bool {
 	return true
 }
 
-// IsPositiveInteger to validate if all value is positive integer from integer type values
-func IsPositiveInteger(values ...int) bool {
+// IsNonNegative is a func to validate if all value is non-negative integer from integer type values
+func IsNonNegative(values ...int) bool {
 	for _, value := range values {
-		if !validator.IsPositive(float64(value)) {
+		if value < 0 {
 			return false
 		}
 	}

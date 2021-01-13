@@ -30,11 +30,6 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	pageNumStr := r.FormValue("page")
 	pageSizeStr := r.FormValue("pagesize")
 
-	// if !validate.IsInt(userIDStr) || !validate.IsInt(pageNumStr) || !validate.IsInt(pageSizeStr) {
-	// 	utils.JSONResponseWriter(&w, http.StatusBadRequest,
-	// 		*(models.NewErrorResponse("bad query value")), nil)
-	// 	return
-	// }
 	if !utils.IsInteger(userIDStr, pageNumStr, pageSizeStr) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("bad query value")), nil)
@@ -48,13 +43,7 @@ func GetThreadsList(w http.ResponseWriter, r *http.Request) {
 	pageSize, _ := strconv.Atoi(r.FormValue("pagesize"))
 	offset := pageNum * pageSize
 
-	// if !validate.IsPositive(float64(userID64)) ||
-	// 	!validate.IsPositive(float64(pageNum)) || !validate.IsPositive(float64(pageSize)) {
-	// 	utils.JSONResponseWriter(&w, http.StatusBadRequest,
-	// 		*(models.NewErrorResponse("bad query value")), nil)
-	// 	return
-	// }
-	if !utils.IsPositiveInteger(int(userID64), pageNum, pageSize) {
+	if !utils.IsNonNegative(pageNum+1, pageSize) {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("bad query value")), nil)
 		return
