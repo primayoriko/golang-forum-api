@@ -25,3 +25,33 @@ func IsNonNegative(values ...int) bool {
 
 	return true
 }
+
+// IsNonEmpty used to check whether the values is set to empty/zero in their corresponding type
+func IsNonEmpty(values ...interface{}) bool {
+	for _, value := range values {
+		switch value.(type) {
+		case string:
+			if value == "" {
+				return false
+			}
+		case int:
+			if value == 0 {
+				return false
+			}
+		case uint:
+			if value == 0 {
+				return false
+			}
+		case float64:
+			if value == 0 {
+				return false
+			}
+		default:
+			if value == nil {
+				return false
+			}
+		}
+	}
+
+	return true
+}
