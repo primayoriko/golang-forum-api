@@ -18,16 +18,16 @@ Here is summary general structure (folder and important files) in the project an
   - **models**: Structure that used as the DB table's schema representation in Go, and also being model for request-response format and It's corresponding casting function/method
   - **routers**: Function that define endpoint path and It's pipeline or route or function chain that become request-response way
   - **utils**: Helper function to help implement other functionalities faster, easier, and less redundant
-  - <b>*server.go*</b>: Go code that become gateway (startup) of the API 
+  - ***server.go***: Go code that become gateway (startup) of the API 
 - **docs**: Related to the documentation of the project, especially of the API
   - **assets**: Static file that being served as the content of the docs (such as images, etc)
   - **swaggerui**: Satic file that specifically for the file server of the swagger docs
 - **logs**: Log file(s) of the API
 - **migrations**: Go source code that needed to migrate model/schema to the DB
 - **seeders**: Go source code that needed to seed/insert data/record to the DB
-- <b>*main.go*</b>: Go code that become gateway of the project application
-- <b>*.env*</b>: Environment variable that used to run this app
-- <b>* *.sh*</b>: Shell console code that highly needed and packed to help operation of the project
+- ***main.go***: Go code that become gateway of the project application
+- ***.env***: Environment variable that used to run this app
+- *** *.sh***: Shell console code that highly needed and packed to help operation of the project
   
 <!-- ```
 root
@@ -60,14 +60,14 @@ root
 
 Here is the details of model's schema that used in the DB 
 
-1. User -> users
+1. **User** -> ***users***
    - ID: uint32 -> id: bigint (bigserial)
    - Username: string -> username: varchar(255) unique not null
    - Email: string -> email: varchar(255) unique not null
    - Password: string -> password: varchar(255) not null
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
-2. Thread -> threads
+2. **Thread** -> ***threads***
    - ID: uint64 -> id: bigint (bigserial)
    - Title: string -> title: varchar(255) not null
    - Topic: string -> topic: varchar(255) not null
@@ -76,7 +76,7 @@ Here is the details of model's schema that used in the DB
    - Posts: []*Post
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
-3. Post -> posts
+3. **Post** -> ***posts***
    - ID: serial, uint64
    - AuthorID: uint64 -> author_id: bigint
    - Author: *User
@@ -88,32 +88,32 @@ Here is the details of model's schema that used in the DB
 
 And the relations basically are
 
-1. One-to-Many between User and Thread
-   -> threads.creator_id referencing users.id
-2. One-to-Many between User and Post
-   -> posts.author_id referencing users.id
-3. One-to-Many between Thread and Thread
-   -> posts.thread_id referencing threads.id
+1. One-to-Many between **User** and **Thread**
+   -> ***threads.creator_id*** referencing ***users.id***
+2. One-to-Many between **User** and **Post**
+   -> ***posts.author_id*** referencing ***users.id***
+3. One-to-Many between **Thread** and **Thread**
+   -> ***posts.thread_id*** referencing ***threads.id***
 
 ## API Endpoints
 
 -------
 More details of the API endpoint you could see in the swagger docs, but here are summary of the available endpoints:
-1. SwaggerUI Docs in `/docs/` [get]
-2. User
+1. **SwaggerUI Docs** in `/docs/` [get]
+2. **User**
    - `/signin` [post]
    - `/signup` [post]
    - `/users` [get]
    - `/users` [patch]
    - `/users/{id}` [get]
    - `/users/{id}` [delete]
-3. Thread
+3. **Thread**
    - `/threads` [get]
    - `/threads` [post]
    - `/threads` [patch]
    - `/threads/{id}` [get]
    - `/threads/{id}` [delete]
-4. Post
+4. ***Post***
    - `/posts` [get]
    - `/posts` [post]
    - `/posts` [patch]
@@ -124,12 +124,12 @@ More details of the API endpoint you could see in the swagger docs, but here are
 
 -------
 
-1. Go, here I'm using v1.13
-2. PostgreSQL
-3. Linux OS (optional), recommended using Ubuntu-based distros since I'm using it (Ubuntu 20.04).
-4. Docker (optional), if you want to containerize the app and the db 
-5. Postman (optional), to use or test the API with forging requests  directly, and could be used to open [postman_collection.json](docs/forum_api.postman_collection.json) that include request sample of every endpoints.
-6. Browser (optional), such as Firefox or Chrome, which is needed to see swaggerui static file from the fileserver.
+1. [**Go**](https://golang.org/), here I'm using v1.13.
+2. [**PostgreSQL**](https://www.postgresql.org/), and here I'm using v13.1.
+3. **Linux OS** (optional), recommended using Ubuntu-based distros since I'm using [**Ubuntu 20.04**](https://ubuntu.com/).
+4. [**Docker**](https://www.docker.com/) (optional), if you want to containerize the app and the db.
+5. [**Postman**](https://www.postman.com/) (optional), to use or test the API with forging requests  directly, and could be used to open [postman_collection.json](docs/forum_api.postman_collection.json) that include request sample of every endpoints.
+6. Browser (optional), such as [**Firefox**](https://www.mozilla.org/en-US/firefox/new/) or [**Chrome**](https://www.google.com/chrome/), which is needed to see swaggerui static file from the fileserver.
 
 ## Go Library/Module Used
 
@@ -150,7 +150,7 @@ More details of the API endpoint you could see in the swagger docs, but here are
 -------
 For run the API for the first time, make sure to do these steps:
 
-1. Prepare application that needed, minimum Go and Postgres. You could use dockerized version API from create the docker image with the `Dockerfile`, and also create PostgreSQL instance in docker container with command in `init_db.sh`, or simply you could just run in terminal
+1. Prepare application that needed, minimum Go and PostgreSQL. You could use dockerized version API from create the docker image with the `Dockerfile`, and also create PostgreSQL instance in docker container with command in `init_db.sh`, or simply you could just run in terminal
    ```
       sh init_db.sh
    ```
@@ -168,15 +168,15 @@ For run the API for the first time, make sure to do these steps:
 -------
 Running the application is just run the `main.go` in the root of the project based on main function of the app that you want to use
 
-1. API
+1. **API**
    ```
       go run main.go
    ```
-2. Migrate model
+2. **Migrate Models**
    ```
       go run main.go -- migrate
    ```
-3. Seed Data 
+3. **Seed Data**
    ```
       go run main.go -- seed
    ```
