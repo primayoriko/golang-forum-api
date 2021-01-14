@@ -35,7 +35,7 @@ type PostUpdateRequest struct {
 // InjectToModel method to Injecting request structure to it's coresponsing model
 func (pc *PostCreateRequest) InjectToModel(target *Post) error {
 	// if pc.ThreadID == 0 || pc.Content == "" {
-	if utils.IsNonEmpty(pc.ThreadID, pc.Content) {
+	if !utils.IsNonEmpty(pc.ThreadID, pc.Content) {
 		return errors.New("thread_id/content cannot be left blank/empty")
 	}
 

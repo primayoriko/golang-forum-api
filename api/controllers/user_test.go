@@ -17,129 +17,6 @@ import (
 	"gitlab.com/hydra/forum-api/api/utils"
 )
 
-func Test_SignUp(t *testing.T) {
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-
-	r := mux.NewRouter()
-	r.HandleFunc("/signup", controllers.SignUp).Methods("POST")
-
-	ts := httptest.NewServer(r)
-
-	defer ts.Close()
-
-	t.Run("Success", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signup").
-			JSON(map[string]string{
-				"username": "test1",
-				"email":    "test@g.com",
-				"password": "123",
-			}).
-			Expect(t).
-			Status(http.StatusCreated).
-			End()
-	})
-
-	t.Run("Fail-ExistingUsernameOrEmail", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signup").
-			JSON(map[string]string{
-				"username": "test1",
-				"email":    "test@g.com",
-				"password": "123",
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
-			End()
-	})
-
-	t.Run("Fail-EmptyRequiredField", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signup").
-			JSON(map[string]string{
-				"username": "test1",
-				"password": "123",
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
-			End()
-	})
-
-	t.Run("Fail-BadFormatField", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signup").
-			JSON(map[string]string{
-				"username": "test1",
-				"email":    "a",
-				"password": "123",
-			}).
-			Expect(t).
-			Status(http.StatusBadRequest).
-			End()
-	})
-}
-
-func Test_Login(t *testing.T) {
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-
-	r := mux.NewRouter()
-	r.HandleFunc("/signin", controllers.SignIn).Methods("POST")
-
-	ts := httptest.NewServer(r)
-
-	defer ts.Close()
-
-	t.Run("Success", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signin").
-			JSON(map[string]string{
-				"username": "test1",
-				"password": "123",
-			}).
-			Expect(t).
-			Status(http.StatusOK).
-			Assert(jsonpath.Chain().
-				Present("token").
-				End()).
-			End()
-	})
-
-	t.Run("Fail-WrongPass", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signin").
-			JSON(map[string]string{
-				"username": "test1",
-				"password": "1234",
-			}).
-			Expect(t).
-			Status(http.StatusUnauthorized).
-			End()
-	})
-
-	t.Run("Fail-NonExistentUser", func(t *testing.T) {
-		apitest.New().
-			Handler(r).
-			Post("/signin").
-			JSON(map[string]string{
-				"username": "test2",
-				"password": "1234",
-			}).
-			Expect(t).
-			Status(http.StatusUnauthorized).
-			End()
-	})
-}
-
 func Test_GetUsers(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
 		log.Fatal("Error loading .env file", err)
@@ -277,6 +154,129 @@ func Test_GetUser(t *testing.T) {
 			Header("Authorization", token).
 			Expect(t).
 			Status(http.StatusBadRequest).
+			End()
+	})
+}
+
+func Test_SignUp(t *testing.T) {
+	if err := godotenv.Load("../../.env"); err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+
+	r := mux.NewRouter()
+	r.HandleFunc("/signup", controllers.SignUp).Methods("POST")
+
+	ts := httptest.NewServer(r)
+
+	defer ts.Close()
+
+	t.Run("Success", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signup").
+			JSON(map[string]string{
+				"username": "test1",
+				"email":    "test@g.com",
+				"password": "123",
+			}).
+			Expect(t).
+			Status(http.StatusCreated).
+			End()
+	})
+
+	t.Run("Fail-ExistingUsernameOrEmail", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signup").
+			JSON(map[string]string{
+				"username": "test1",
+				"email":    "test@g.com",
+				"password": "123",
+			}).
+			Expect(t).
+			Status(http.StatusBadRequest).
+			End()
+	})
+
+	t.Run("Fail-EmptyRequiredField", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signup").
+			JSON(map[string]string{
+				"username": "test1",
+				"password": "123",
+			}).
+			Expect(t).
+			Status(http.StatusBadRequest).
+			End()
+	})
+
+	t.Run("Fail-BadFormatField", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signup").
+			JSON(map[string]string{
+				"username": "test1",
+				"email":    "a",
+				"password": "123",
+			}).
+			Expect(t).
+			Status(http.StatusBadRequest).
+			End()
+	})
+}
+
+func Test_Login(t *testing.T) {
+	if err := godotenv.Load("../../.env"); err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+
+	r := mux.NewRouter()
+	r.HandleFunc("/signin", controllers.SignIn).Methods("POST")
+
+	ts := httptest.NewServer(r)
+
+	defer ts.Close()
+
+	t.Run("Success", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signin").
+			JSON(map[string]string{
+				"username": "test1",
+				"password": "123",
+			}).
+			Expect(t).
+			Status(http.StatusOK).
+			Assert(jsonpath.Chain().
+				Present("token").
+				End()).
+			End()
+	})
+
+	t.Run("Fail-WrongPass", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signin").
+			JSON(map[string]string{
+				"username": "test1",
+				"password": "1234",
+			}).
+			Expect(t).
+			Status(http.StatusUnauthorized).
+			End()
+	})
+
+	t.Run("Fail-NonExistentUser", func(t *testing.T) {
+		apitest.New().
+			Handler(r).
+			Post("/signin").
+			JSON(map[string]string{
+				"username": "test2",
+				"password": "1234",
+			}).
+			Expect(t).
+			Status(http.StatusUnauthorized).
 			End()
 	})
 }

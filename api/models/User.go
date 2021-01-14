@@ -42,7 +42,7 @@ type UserResponse struct {
 
 // InjectToModel used to inject request into corresponding model
 func (rr *RegistrationRequest) InjectToModel(target *User) error {
-	if utils.IsNonEmpty(rr.Username, rr.Email, rr.Password) {
+	if !utils.IsNonEmpty(rr.Username, rr.Email, rr.Password) {
 		return errors.New("username/email/password can't be left empty/blank")
 	}
 
@@ -75,6 +75,8 @@ func (ur *UserUpdateRequest) InjectToModel(target *User) error {
 	if ur.Password != "" {
 		target.Password = ur.Password
 	}
+
+	target.ID = ur.ID
 
 	return nil
 }
