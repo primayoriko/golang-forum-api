@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"hansgan212\",\n    \"password\": \"12342\",\n    \"email\": \"hans@g.com212\"\n}",
+							"raw": "{\n    \"username\": \"test1\",\n    \"email\":    \"test@g.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -155,14 +155,183 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:8008/users/a",
+							"raw": "localhost:8008/users?page=2",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "n",
+									"disabled": true
+								},
+								{
+									"key": "minid",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "maxid",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdWZhbCJ9.B040bDzIzUtAlRn7uC5LCYDrXcFQV_dbbsgLPis8TO0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8008/users/1",
 							"host": [
 								"localhost"
 							],
 							"port": "8008",
 							"path": [
 								"users",
-								"a"
+								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "n",
+									"disabled": true
+								},
+								{
+									"key": "minid",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "maxid",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":    1,\n    \"email\": \"t@g.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8008/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteThread",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
+							}
+						],
+						"url": {
+							"raw": "localhost:8008/users/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8008",
+							"path": [
+								"users",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "userid",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "pagesize",
+									"value": "0",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -174,18 +343,18 @@
 			"name": "Threads",
 			"item": [
 				{
-					"name": "GetThreadsList",
+					"name": "GetThreads",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4",
-								"type": "text"
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuYXVmYWwifQ.xtCBYyakyCrXne68A5rFdjTQNwZhbsnqac0ZU3RFWM4"
 							}
 						],
 						"url": {
-							"raw": "localhost:8008/threads?userid=2",
+							"raw": "localhost:8008/threads?userid=2&pagesize=0",
 							"host": [
 								"localhost"
 							],
@@ -210,8 +379,7 @@
 								},
 								{
 									"key": "pagesize",
-									"value": "1",
-									"disabled": true
+									"value": "0"
 								}
 							]
 						}
