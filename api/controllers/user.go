@@ -9,10 +9,9 @@ import (
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
-
-	// _"github.com/gorilla/context"
 
 	"gitlab.com/hydra/forum-api/api/auth"
 	"gitlab.com/hydra/forum-api/api/database"
@@ -23,21 +22,28 @@ import (
 // SignUp is function for create new User
 // @Title Sign Up.
 // @Description Create a new user from JSON-formatted request body.
-// @Param  post  body  models.User  true  "User"
+// @Param  post  body  models.RegistrationRequest  true  "RegistrationRequest"
 // @Success  201  object  models.ErrorResponse   "Created - No Body"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
 // @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
 // @Route /signup [post]
 // @Tag User
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
+	var regisReq models.RegistrationRequest
+	if err := json.NewDecoder(r.Body).Decode(&regisReq); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse("invalid body format")), nil)
 		return
 	}
 
+	var user models.User
+	if err := regisReq.InjectToModel(&user); err != nil {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
+
+	var err error
 	user.Password, err = utils.HashPassword(user.Password)
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
@@ -201,8 +207,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	var usersRes []models.UserResponse
 	var userRes models.UserResponse
-	for _, obj := range users {
-		if err := obj.InjectToResponse(&userRes); err != nil {
+	for _, dbUser := range users {
+		if err := userRes.InsertFromModel(dbUser); err != nil {
 			utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 				*(models.NewErrorResponse(err.Error())), nil)
 			return
@@ -262,7 +268,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userRes models.UserResponse
-	if err := user.InjectToResponse(&userRes); err != nil {
+	if err := userRes.InsertFromModel(user); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
 		return
@@ -273,126 +279,128 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// // UpdateUser is for change it's own user data
-// func UpdateUser(w http.ResponseWriter, r *http.Request) {
-// 	userID := context.Get(r, "id").(uint32)
-// 	var user, dbUser models.User
-// 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("invalid body format")), nil)
-// 		return
-// 	}
+// UpdateUser is for change it's own user data
+// @Title Update User.
+// @Description Update an existing user from JSON-formatted Request Body.
+// @Param  user  body  models.UserUpdateRequest  true  "UserUpdateRequest"
+// @Success  204  object  models.ErrorResponse   "No Content - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /users [patch]
+// @Tag User
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	userID := context.Get(r, "id").(uint32)
 
-// 	if user.ID == 0 {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("need user id")), nil)
-// 		return
-// 	}
+	var userReq models.UserUpdateRequest
+	if err := json.NewDecoder(r.Body).Decode(&userReq); err != nil {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("invalid body format")), nil)
+		return
+	}
 
-// 	db, err := database.ConnectDB()
-// 	if err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse("failed to connect db")), nil)
-// 		return
-// 	}
+	var user, dbUser models.User
+	if err := userReq.InjectToModel(&user); err != nil {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 	if err := db.Where("id = ?", user.ID).First(&dbUser).Error; err != nil {
-// 		if errors.Is(err, gorm.ErrRecordNotFound) {
-// 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-// 				*(models.NewErrorResponse("can't find specified user")), nil)
-// 			return
-// 		}
+	db, err := database.ConnectDB()
+	if err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse("failed to connect db")), nil)
+		return
+	}
 
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-// 		return
-// 	}
+	if err := db.Where("id = ?", user.ID).First(&dbUser).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.JSONResponseWriter(&w, http.StatusNotFound,
+				*(models.NewErrorResponse("can't find specified user")), nil)
+			return
+		}
 
-// 	if dbUser.CreatorID != userID {
-// 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-// 			*(models.NewErrorResponse("can't do specified action as this user")), nil)
-// 		return
-// 	}
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 	if user.CreatorID != userID && user.CreatorID != 0 {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("can't change creator id")), nil)
-// 		return
-// 	}
+	if dbUser.ID != userID {
+		utils.JSONResponseWriter(&w, http.StatusForbidden,
+			*(models.NewErrorResponse("can't do specified action as this user")), nil)
+		return
+	}
 
-// 	// user.CreatorID = userID
-// 	if user.Topic != "" {
-// 		dbUser.Topic = user.Topic
-// 	}
-// 	if user.Title != "" {
-// 		dbUser.Title = user.Title
-// 	}
+	if err := db.Model(&user).Updates(user).Error; err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
 
-// 	if err := db.Save(&dbUser).Error; err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-// 		return
-// 	}
+	utils.JSONResponseWriter(&w, http.StatusNoContent,
+		nil, nil)
+	return
+}
 
-// 	if err := db.Model(&dbUser).Updates(dbUser).Error; err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-// 		return
-// 	}
+// DeleteUser is for delete it's own user account
+// @Title Delete User.
+// @Description Delete an existing user by it's id.
+// @Param  id  path  int  true  "User.ID"
+// @Success  200  object  models.User  "User JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /users/{id} [delete]
+// @Tag User
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	userID := context.Get(r, "id")
+	idStr := mux.Vars(r)["id"]
 
-// 	utils.JSONResponseWriter(&w, http.StatusNoContent,
-// 		nil, nil)
-// 	return
-// }
+	if idStr == "" || !utils.IsInteger(idStr) {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("invalid id format")), nil)
+		return
+	}
 
-// // DeleteUser is for delete it's own user account
-// func DeleteUser(w http.ResponseWriter, r *http.Request) {
-// 	userID := context.Get(r, "id")
-// 	idStr := mux.Vars(r)["id"]
+	id, _ := strconv.ParseUint(idStr, 10, 64)
 
-// 	if idStr == "" || !utils.IsInteger(idStr) {
-// 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
-// 			*(models.NewErrorResponse("invalid id format")), nil)
-// 		return
-// 	}
+	db, err := database.ConnectDB()
+	if err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse("failed to connect db")), nil)
+		return
+	}
 
-// 	id, _ := strconv.ParseUint(idStr, 10, 64)
+	var user models.User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.JSONResponseWriter(&w, http.StatusNotFound,
+				*(models.NewErrorResponse("can't find specified user")), nil)
+			return
+		}
 
-// 	db, err := database.ConnectDB()
-// 	if err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse("failed to connect db")), nil)
-// 		return
-// 	}
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
 
-// 	var user models.User
-// 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-// 		if errors.Is(err, gorm.ErrRecordNotFound) {
-// 			utils.JSONResponseWriter(&w, http.StatusNotFound,
-// 				*(models.NewErrorResponse("can't find specified user")), nil)
-// 			return
-// 		}
+		return
+	}
 
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
+	if user.ID != userID.(uint32) {
+		utils.JSONResponseWriter(&w, http.StatusForbidden,
+			*(models.NewErrorResponse("can't do the action as this user")), nil)
+		return
+	}
 
-// 		return
-// 	}
+	if err := db.Delete(&user, id).Error; err != nil {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
 
-// 	if user.CreatorID != userID.(uint32) {
-// 		utils.JSONResponseWriter(&w, http.StatusForbidden,
-// 			*(models.NewErrorResponse("can't do the action as this user")), nil)
-// 		return
-// 	}
+		return
+	}
 
-// 	if err := db.Delete(&user, id).Error; err != nil {
-// 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
-// 			*(models.NewErrorResponse(err.Error())), nil)
-
-// 		return
-// 	}
-
-// 	utils.JSONResponseWriter(&w, http.StatusOK,
-// 		user, nil)
-// 	return
-// }
+	utils.JSONResponseWriter(&w, http.StatusOK,
+		user, nil)
+	return
+}

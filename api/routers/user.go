@@ -40,23 +40,21 @@ func AddUserRoutes(router *mux.Router) error {
 			}, controllers.GetUsers)).
 		Methods("GET").Name("GetUsers")
 
-	// userRouter.HandleFunc("/{username:[a-zA-Z0-9]+}",
+	userRouter.Queries().
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.UpdateUser)).
+		Methods("PATCH").Name("UpdateUser")
 
-	// userRouter.Queries().
-	// 	HandlerFunc(utils.ChainHandlerFuncs(
-	// 		[]utils.Middleware{
-	// 			middlewares.CheckJWT,
-	// 			middlewares.Log,
-	// 		}, controllers.UpdateUser)).
-	// 	Methods("PATCH").Name("UpdateUser")
-
-	// userRouter.Path("/{id}").
-	// 	HandlerFunc(utils.ChainHandlerFuncs(
-	// 		[]utils.Middleware{
-	// 			middlewares.CheckJWT,
-	// 			middlewares.Log,
-	// 		}, controllers.DeleteUser)).
-	// 	Methods("DELETE").Name("DeleteUser")
+	userRouter.Path("/{id}").
+		HandlerFunc(utils.ChainHandlerFuncs(
+			[]utils.Middleware{
+				middlewares.CheckJWT,
+				middlewares.Log,
+			}, controllers.DeleteUser)).
+		Methods("DELETE").Name("DeleteUser")
 
 	return nil
 }

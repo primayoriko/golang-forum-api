@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"time"
+
+	"gitlab.com/hydra/forum-api/api/utils"
 )
 
 // Thread is model for threads table in the db
@@ -33,7 +35,8 @@ type ThreadUpdateRequest struct {
 
 // InjectToModel method to Injecting request structure to it's coresponsing model
 func (tc *ThreadCreateRequest) InjectToModel(target *Thread) error {
-	if tc.Title == "" || tc.Topic == "" {
+	// if tc.Title == "" || tc.Topic == "" {
+	if !utils.IsNonEmpty(tc.Title, tc.Topic) {
 		return errors.New("topic/content cannot be left blank/empty")
 	}
 

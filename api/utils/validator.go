@@ -38,7 +38,23 @@ func IsNonEmpty(values ...interface{}) bool {
 			if value == 0 {
 				return false
 			}
+		case int64:
+			if value == 0 {
+				return false
+			}
 		case uint:
+			if value == 0 {
+				return false
+			}
+		case uint32:
+			if value == 0 {
+				return false
+			}
+		case uint64:
+			if value == 0 {
+				return false
+			}
+		case float32:
 			if value == 0 {
 				return false
 			}

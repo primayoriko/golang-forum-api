@@ -174,7 +174,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 // UpdatePost will update an existing Post
 // @Title Update Post.
-// @Description Update a post from JSON-formatted request body.
+// @Description Update an existing post from JSON-formatted request body.
 // @Param  post  body  models.PostUpdateRequest  true  "PostUpdateRequest"
 // @Success  204  object  models.ErrorResponse   "No Content - No Body"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
@@ -238,7 +238,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 
 // DeletePost will delete an existing Post
 // @Title Delete Post.
-// @Description Delete a post by it's ID.
+// @Description Delete an existing post by it's ID.
 // @Param  id  path  int  true  "Post.ID"
 // @Success  200  object  models.Post  "Post JSON"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"

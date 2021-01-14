@@ -259,7 +259,7 @@
           "Post"
         ],
         "summary": "Update Post.",
-        "description": " Update a post from JSON-formatted request body.",
+        "description": " Update an existing post from JSON-formatted request body.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -330,7 +330,7 @@
           "Post"
         ],
         "summary": "Delete Post.",
-        "description": " Delete a post by it's ID.",
+        "description": " Delete an existing post by it's ID.",
         "parameters": [
           {
             "name": "id",
@@ -440,7 +440,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.RegistrationRequest"
               }
             }
           },
@@ -696,7 +696,7 @@
           "Thread"
         ],
         "summary": "Update Thread.",
-        "description": " Update a thread from JSON-formatted request body.",
+        "description": " Update an existing thread from JSON-formatted request body.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -839,7 +839,7 @@
           "Thread"
         ],
         "summary": "Delete Thread.",
-        "description": " Delete a thread by it's ID.",
+        "description": " Delete an existing thread by it's ID.",
         "parameters": [
           {
             "name": "id",
@@ -966,11 +966,155 @@
             }
           }
         ]
+      },
+      "patch": {
+        "responses": {
+          "204": {
+            "description": "No Content - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "summary": "Update User.",
+        "description": " Update an existing user from JSON-formatted Request Body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.UserUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/users/{id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "User JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete User.",
+        "description": " Delete an existing user by it's id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User.ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "User.ID"
+            }
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
+      "": {},
       "gitlab.com.hydra.forum-api.api.auth.Claims": {
         "type": "object",
         "properties": {
@@ -1053,6 +1197,20 @@
             "type": "integer"
           },
           "content": {
+            "type": "string"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.RegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           }
         }
@@ -1169,6 +1327,20 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
           }
         }
       }

@@ -221,7 +221,7 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 
 // UpdateThread will update an existing Thread
 // @Title Update Thread.
-// @Description Update a thread from JSON-formatted request body.
+// @Description Update an existing thread from JSON-formatted request body.
 // @Param  thread  body  models.ThreadUpdateRequest  true  "ThreadUpdateRequest"
 // @Success  204  object  models.ErrorResponse   "No Content - No Body"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
@@ -285,7 +285,7 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 
 // DeleteThread will delete an existing Thread
 // @Title Delete Thread.
-// @Description Delete a thread by it's ID.
+// @Description Delete an existing thread by it's ID.
 // @Param  id  path  int  true  "Thread.ID"
 // @Success  200  object  models.Thread  "Thread JSON"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"

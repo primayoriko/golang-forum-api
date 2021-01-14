@@ -89,7 +89,7 @@ func (u *User) InjectToResponse(target *UserResponse) error {
 }
 
 // InsertFromModel used to insert response struct data form It's corresponding model
-func (ur *UserResponse) InsertFromModel(user *User) error {
+func (ur *UserResponse) InsertFromModel(user User) error {
 	ur.ID = user.ID
 	ur.Username = user.Username
 	ur.Email = user.Email
