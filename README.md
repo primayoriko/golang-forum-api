@@ -201,3 +201,4 @@ And see if there is any fail on it.
 -------
 
 1. Still can't log GORM query into a file.
+2. Log message into terminal still has bad format (spacing).

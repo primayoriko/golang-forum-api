@@ -22,11 +22,6 @@ type StandardLogger struct {
 var (
 	logger *StandardLogger
 	once   sync.Once
-
-	invalidArgMessage      = Event{1, "Invalid arg: %s"}
-	invalidArgValueMessage = Event{2, "Invalid value for argument: %s: %v"}
-	missingArgMessage      = Event{3, "Missing arg: %s"}
-	successMessage         = Event{4, "Missing arg: %s"}
 )
 
 // NewLogger is nethod for initialize the log functionality
@@ -47,22 +42,6 @@ func NewLogger() *StandardLogger {
 
 	var standardLogger = &StandardLogger{baseLogger}
 
-	// log.SetFormatter(&log.JSONFormatter{})
-	// standardFields := log.Fields{
-	// 	"hostname": "staging-1",
-	// 	"appname":  "foo-app",
-	// 	"session":  "1ce3f6v",
-	// }
-
-	// standardLogger.WithFields(standardFields)
-	// 	WithFields(
-	// 		log.Fields{
-	// 			"string": "foo",
-	// 			"int":    1,
-	// 			"float":  1.1,
-	// 		}).
-	// 	Info("Testing log with golang")
-
 	logger = standardLogger
 
 	return standardLogger
@@ -77,27 +56,20 @@ func GetInstance() *StandardLogger {
 	return logger
 }
 
-// WriteLog x
-func WriteLog() {
+// WriteLog used to writing log both to terminal and file
+func (l *StandardLogger) WriteLog(id uint32, username string,
+	method string, path string, statusCode int, statusText string) {
+	fields := logrus.Fields{
+		"id":          id,
+		"username":    username,
+		"method":      method,
+		"path":        path,
+		"status_code": statusCode,
+	}
 
-}
-
-// InvalidArg is a standard error message
-func (l *StandardLogger) InvalidArg(argumentName string) {
-	l.Errorf(invalidArgMessage.message, argumentName)
-}
-
-// InvalidArgValue is a standard error message
-func (l *StandardLogger) InvalidArgValue(argumentName string, argumentValue string) {
-	l.Errorf(invalidArgValueMessage.message, argumentName, argumentValue)
-}
-
-// MissingArg is a standard error message
-func (l *StandardLogger) MissingArg(argumentName string) {
-	l.Errorf(missingArgMessage.message, argumentName)
-}
-
-// SuccessArg is a standard error message
-func (l *StandardLogger) SuccessArg(argumentName string) {
-	l.Infof(missingArgMessage.message, argumentName)
+	if statusCode < 500 {
+		l.WithFields(fields).Infoln(statusText)
+	} else {
+		l.WithFields(fields).Errorln(statusText)
+	}
 }

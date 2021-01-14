@@ -165,3 +165,11 @@
 {"level":"info","msg":"GET /threads/14, response 404 Not Found","time":"2021-01-14T13:53:22+07:00"}
 {"level":"info","msg":"GET /threads/14, response 404 Not Found","time":"2021-01-14T14:02:28+07:00"}
 {"level":"info","msg":"GET /threads/14, response 404 Not Found","time":"2021-01-14T14:03:41+07:00"}
+{"level":"info","msg":"GET /users/1, response 200 OK","time":"2021-01-14T22:55:38+07:00"}
+{"id":0,"level":"info","method":"GET","msg":"OK","path":"/users/1","status_code":200,"time":"2021-01-14T23:11:54+07:00","username":"naufal"}
+{"id":0,"level":"info","method":"GET","msg":"OK","path":"/users/1","status_code":200,"time":"2021-01-14T23:12:58+07:00","username":"naufal"}
+{"id":0,"level":"info","method":"GET","msg":"OK","path":"/users/1","status_code":200,"time":"2021-01-14T23:13:28+07:00","username":"naufal"}
+{"id":0,"level":"info","method":"GET","msg":"OK\r","path":"/users/1","status_code":200,"time":"2021-01-14T23:14:24+07:00","username":"naufal"}
+{"id":0,"level":"info","method":"GET","msg":"OK\r\n","path":"/users/1","status_code":200,"time":"2021-01-14T23:14:49+07:00","username":"naufal"}
+{"id":0,"level":"info","method":"GET","msg":"OK","path":"/users/1","status_code":200,"time":"2021-01-14T23:16:53+07:00","username":"naufal"}
+{"id":1,"level":"error","method":"GET","msg":"Not Found","path":"/threads/14","status_code":404,"time":"2021-01-14T23:17:02+07:00","username":"naufal"}
