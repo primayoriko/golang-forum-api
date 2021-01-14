@@ -17,12 +17,21 @@ import (
 )
 
 // GetThreads will fetch all threads list of specific criteria
-// @Title Get Thread List.
+// @Title Get Threads.
 // @Description Get all related thread of specific criteria.
-// @Param  groupID  path  int  true  "Id of a specific group."
+// @Param username query string	optional	"User.Username"
+// @Param userid query uint32	optional	"Thread.CreatorID -> User.ID"
+// @Param topic query string	optional	"Thread.Topic"
+// @Param title query string	optional	"Thread.Title"
+// @Param page query int	optional	"pagination, current page"
+// @Param pagesize query int	optional	"pagination, entry per page"
 // @Success  200  array  models.Thread  "Thread JSON"
-// @Resource threads
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
 // @Route /threads [get]
+// @Tag Thread
 func GetThreads(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	topic := r.FormValue("topic")
@@ -112,6 +121,16 @@ func GetThreads(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetThread will fetch threads and its posts list of specific criteria
+// @Title Get Thread.
+// @Description Get a thread by it's ID.
+// @Param  id  path  int  true  "Thread.ID"
+// @Success  200  object  models.Thread  "Thread JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /threads/{id} [get]
+// @Tag Thread
 func GetThread(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 
@@ -156,6 +175,16 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 }
 
 // CreateThread will make a new thread
+// @Title Create Thread.
+// @Description Create a new thread from JSON-formatted request body.
+// @Param  thread  body  models.ThreadCreateRequest  true  "ThreadCreateRequest"
+// @Success  201  object  models.ErrorResponse   "Created - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /threads [post]
+// @Tag Thread
 func CreateThread(w http.ResponseWriter, r *http.Request) {
 	var threadReq models.ThreadCreateRequest
 	if err := json.NewDecoder(r.Body).Decode(&threadReq); err != nil {
@@ -191,6 +220,16 @@ func CreateThread(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateThread will update an existing Thread
+// @Title Update Thread.
+// @Description Update a thread from JSON-formatted request body.
+// @Param  thread  body  models.ThreadUpdateRequest  true  "ThreadUpdateRequest"
+// @Success  204  object  models.ErrorResponse   "No Content - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /threads [patch]
+// @Tag Thread
 func UpdateThread(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id").(uint32)
 
@@ -245,6 +284,16 @@ func UpdateThread(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteThread will delete an existing Thread
+// @Title Delete Thread.
+// @Description Delete a thread by it's ID.
+// @Param  id  path  int  true  "Thread.ID"
+// @Success  200  object  models.Thread  "Thread JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /threads/{id} [delete]
+// @Tag Thread
 func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id")
 	idStr := mux.Vars(r)["id"]

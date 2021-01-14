@@ -9,9 +9,10 @@ import (
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
-	// _"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
+
+	// _"github.com/gorilla/context"
 
 	"gitlab.com/hydra/forum-api/api/auth"
 	"gitlab.com/hydra/forum-api/api/database"
@@ -20,6 +21,14 @@ import (
 )
 
 // SignUp is function for create new User
+// @Title Sign Up.
+// @Description Create a new user from JSON-formatted request body.
+// @Param  post  body  models.User  true  "User"
+// @Success  201  object  models.ErrorResponse   "Created - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /signup [post]
+// @Tag User
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -53,6 +62,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 // SignIn is method for get token for creds/auth
+// @Title Sign In.
+// @Description Login with JSON-formatted request body.
+// @Param  post  body  auth.Credentials  true  "auth.Credentials"
+// @Success  200  object  auth.Claims   "auth.Claims"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /signin [post]
+// @Tag User
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var creds auth.Credentials
 	var user models.User
@@ -108,6 +125,20 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUsers is method for getting data for specified user(s) based on some criteria
+// @Title Get Users.
+// @Description Get all related user of specific criteria.
+// @Param username query string	optional	"User.Username"
+// @Param minid query uint32	optional	"min inclusive value of User.ID"
+// @Param maxid query uint32	optional	"max incluseive value of User.ID"
+// @Param page query int	optional	"pagination, current page"
+// @Param pagesize query int	optional	"pagination, entry per page"
+// @Success  200  array  models.User  "User JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /users [get]
+// @Tag User
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	pageNumStr := r.FormValue("page")
@@ -186,6 +217,16 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUser is method for getting data for specified user(s) based on some criteria
+// @Title Get User.
+// @Description Get a user by it's ID.
+// @Param  id  path  int  true  "User.ID"
+// @Success  200  object  models.User  "User JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /threads/{id} [get]
+// @Tag Thread
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 

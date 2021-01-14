@@ -5,7 +5,7 @@
     "description": "Forum API implemented using golang",
     "contact": {
       "name": "Naufal",
-      "url": "http://primayoriko.github.io",
+      "url": "https://primayoriko.github.io",
       "email": "primayoriko@gmail.com"
     },
     "license": {
@@ -21,6 +21,433 @@
     }
   ],
   "paths": {
+    "/posts": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Post JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Post"
+        ],
+        "summary": "Get Posts.",
+        "description": " Get all related post of specific criteria.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "User.Username",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "User.Username"
+            }
+          },
+          {
+            "name": "userid",
+            "in": "query",
+            "description": "Post.AuthorID -\u003e User.ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Post.AuthorID -\u003e User.ID"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description": "Post.Content",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Post.Content"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "pagination, current page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, current page"
+            }
+          },
+          {
+            "name": "pagesize",
+            "in": "query",
+            "description": "pagination, entry per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, entry per page"
+            }
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Post"
+        ],
+        "summary": "Create Post.",
+        "description": " Create a new post from JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.PostCreateRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "patch": {
+        "responses": {
+          "204": {
+            "description": "No Content - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Post"
+        ],
+        "summary": "Update Post.",
+        "description": " Update a post from JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.PostUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/posts/{id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Post JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Post"
+        ],
+        "summary": "Delete Post.",
+        "description": " Delete a post by it's ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post.ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Post.ID"
+            }
+          }
+        ]
+      }
+    },
+    "/signin": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "auth.Claims",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.auth.Claims"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "summary": "Sign In.",
+        "description": " Login with JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.auth.Credentials"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "summary": "Sign Up.",
+        "description": " Create a new user from JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
     "/threads": {
       "get": {
         "responses": {
@@ -33,23 +460,509 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
-          "threads"
+          "Thread"
         ],
-        "summary": "Get Thread List.",
+        "summary": "Get Threads.",
         "description": " Get all related thread of specific criteria.",
         "parameters": [
           {
-            "name": "groupID",
+            "name": "username",
+            "in": "query",
+            "description": "User.Username",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "User.Username"
+            }
+          },
+          {
+            "name": "userid",
+            "in": "query",
+            "description": "Thread.CreatorID -\u003e User.ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Thread.CreatorID -\u003e User.ID"
+            }
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "description": "Thread.Topic",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Thread.Topic"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Thread.Title",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Thread.Title"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "pagination, current page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, current page"
+            }
+          },
+          {
+            "name": "pagesize",
+            "in": "query",
+            "description": "pagination, entry per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, entry per page"
+            }
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Thread"
+        ],
+        "summary": "Create Thread.",
+        "description": " Create a new thread from JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ThreadCreateRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "patch": {
+        "responses": {
+          "204": {
+            "description": "No Content - No Body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Thread"
+        ],
+        "summary": "Update Thread.",
+        "description": " Update a thread from JSON-formatted request body.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ThreadUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/threads/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Thread JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Thread"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Thread"
+        ],
+        "summary": "Get Thread.",
+        "description": " Get a thread by it's ID.",
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
-            "description": "Id of a specific group.",
+            "description": "Thread.ID",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64",
-              "description": "Id of a specific group."
+              "description": "Thread.ID"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Thread JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Thread"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Thread"
+        ],
+        "summary": "Delete Thread.",
+        "description": " Delete a thread by it's ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Thread.ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Thread.ID"
+            }
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "User JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ErrorResponse JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ],
+        "summary": "Get Users.",
+        "description": " Get all related user of specific criteria.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "User.Username",
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "User.Username"
+            }
+          },
+          {
+            "name": "minid",
+            "in": "query",
+            "description": "min inclusive value of User.ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "min inclusive value of User.ID"
+            }
+          },
+          {
+            "name": "maxid",
+            "in": "query",
+            "description": "max incluseive value of User.ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "max incluseive value of User.ID"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "pagination, current page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, current page"
+            }
+          },
+          {
+            "name": "pagesize",
+            "in": "query",
+            "description": "pagination, entry per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "pagination, entry per page"
             }
           }
         ]
@@ -58,6 +971,92 @@
   },
   "components": {
     "schemas": {
+      "gitlab.com.hydra.forum-api.api.auth.Claims": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.auth.Credentials": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "failure to connect to db"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "author": {
+            "type": "object",
+            "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.User"
+          },
+          "author_id": {
+            "type": "integer"
+          },
+          "thread": {
+            "type": "object",
+            "$ref": "#/components/schemas/gitlab.com.hydra.forum-api.api.models.Thread"
+          },
+          "thread_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.PostCreateRequest": {
+        "type": "object",
+        "properties": {
+          "thread_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.PostUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
       "gitlab.com.hydra.forum-api.api.models.Thread": {
         "type": "object",
         "properties": {
@@ -120,6 +1119,31 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.ThreadCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          }
+        }
+      },
+      "gitlab.com.hydra.forum-api.api.models.ThreadUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
           }
         }
       },

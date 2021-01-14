@@ -16,6 +16,21 @@ import (
 )
 
 // GetPosts will fetch all posts of a specified criteria
+// @Title Get Posts.
+// @Description Get all related post of specific criteria.
+// @Param username query string	optional	"User.Username"
+// @Param userid query uint32	optional	"Post.AuthorID -> User.ID"
+// @Param threadid query unit64	optional	"Post.ThreadID -> Thread.ID"
+// @Param content query string	optional	"Post.Content"
+// @Param page query int	optional	"pagination, current page"
+// @Param pagesize query int	optional	"pagination, entry per page"
+// @Success  200  array  models.Post  "Post JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /posts [get]
+// @Tag Post
 func GetPosts(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	content := r.FormValue("content")
@@ -107,6 +122,16 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 // CreatePost will make a new post on a specific post
+// @Title Create Post.
+// @Description Create a new post from JSON-formatted request body.
+// @Param  post  body  models.PostCreateRequest  true  "PostCreateRequest"
+// @Success  201  object  models.ErrorResponse   "Created - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /posts [post]
+// @Tag Post
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	var postReq models.PostCreateRequest
 	if err := json.NewDecoder(r.Body).Decode(&postReq); err != nil {
@@ -148,6 +173,16 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdatePost will update an existing Post
+// @Title Update Post.
+// @Description Update a post from JSON-formatted request body.
+// @Param  post  body  models.PostUpdateRequest  true  "PostUpdateRequest"
+// @Success  204  object  models.ErrorResponse   "No Content - No Body"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /posts [patch]
+// @Tag Post
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id").(uint32)
 
@@ -202,6 +237,16 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeletePost will delete an existing Post
+// @Title Delete Post.
+// @Description Delete a post by it's ID.
+// @Param  id  path  int  true  "Post.ID"
+// @Success  200  object  models.Post  "Post JSON"
+// @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  401  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  403  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Failure  500  object  models.ErrorResponse  "ErrorResponse JSON"
+// @Route /posts/{id} [delete]
+// @Tag Post
 func DeletePost(w http.ResponseWriter, r *http.Request) {
 	userID := context.Get(r, "id")
 	idStr := mux.Vars(r)["id"]
