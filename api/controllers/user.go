@@ -36,7 +36,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
+	var user, dbUser models.User
 	if err := regisReq.InjectToModel(&user); err != nil {
 		utils.JSONResponseWriter(&w, http.StatusBadRequest,
 			*(models.NewErrorResponse(err.Error())), nil)
@@ -55,6 +55,18 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
 			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
+
+	dbUser = models.User{}
+	err = db.Where("username = ? OR email = ?", user.Username, user.Email).First(&dbUser).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	} else if err == nil {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("existing username/email")), nil)
 		return
 	}
 
@@ -330,6 +342,30 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		utils.JSONResponseWriter(&w, http.StatusForbidden,
 			*(models.NewErrorResponse("can't do specified action as this user")), nil)
 		return
+	}
+
+	dbUser = models.User{}
+	err = db.Where("email = ? AND id <> ?", user.Email, user.ID).First(&dbUser).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	} else if err == nil {
+		utils.JSONResponseWriter(&w, http.StatusBadRequest,
+			*(models.NewErrorResponse("existing email")), nil)
+		return
+	}
+
+	fmt.Println(user)
+	fmt.Println(dbUser)
+	fmt.Println(err)
+
+	if user.Password != "" {
+		if user.Password, err = utils.HashPassword(user.Password); err != nil {
+			utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+				*(models.NewErrorResponse(err.Error())), nil)
+			return
+		}
 	}
 
 	if err := db.Model(&user).Updates(user).Error; err != nil {
