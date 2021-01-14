@@ -15,7 +15,7 @@ type Thread struct {
 	Creator   *User  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"creator"`
 	CreatorID uint32 `gorm:"" json:"creator_id"`
 	// Posts     []Post    `gorm:"polymorphic:Thread;polymorphicValue:threads;" json:"posts"`
-	Posts     []Post    `gorm:"foreign_key:thread_id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"posts"`
+	Posts     []*Post   `gorm:"foreign_key:thread_id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"posts"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }

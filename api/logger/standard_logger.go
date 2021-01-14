@@ -61,7 +61,7 @@ func NewLogger() *StandardLogger {
 	// 			"int":    1,
 	// 			"float":  1.1,
 	// 		}).
-	// 	Info("Testin glog with golang")
+	// 	Info("Testing log with golang")
 
 	logger = standardLogger
 
@@ -75,6 +75,11 @@ func GetInstance() *StandardLogger {
 	})
 
 	return logger
+}
+
+// WriteLog x
+func WriteLog() {
+
 }
 
 // InvalidArg is a standard error message
