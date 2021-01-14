@@ -3,7 +3,7 @@
 ## Description
 
 -------
-API that already provide basic features of the forum web application and implemented in Golang language. This project is sample of production ready API that already has JWT auth system, logger, test, and also openAPI/swagger docs.
+A simple API that already provide basic features of the forum web application and implemented in Golang language. This project is sample of production ready API that already has JWT auth system, logger, test, and also openAPI/swagger docs.
 
 ## Project Structure
 
@@ -67,7 +67,6 @@ Here is the details of model's schema that used in the DB
    - Password: string -> password: varchar(255) not null
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
-
 2. Thread -> threads
    - ID: uint64 -> id: bigint (bigserial)
    - Title: string -> title: varchar(255) not null
@@ -77,7 +76,6 @@ Here is the details of model's schema that used in the DB
    - Posts: []*Post
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
-
 3. Post -> posts
    - ID: serial, uint64
    - AuthorID: uint64 -> author_id: bigint
@@ -88,7 +86,7 @@ Here is the details of model's schema that used in the DB
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
 
-So, thre relation basically
+And the relations basically are
 
 1. One-to-Many between User and Thread
    -> threads.creator_id referencing users.id
@@ -101,21 +99,21 @@ So, thre relation basically
 
 -------
 More details of the API endpoint you could see in the swagger docs, but here are summary of the available endpoints:
-
-1. User
+1. SwaggerUI Docs in `/docs/` [get]
+2. User
    - `/signin` [post]
    - `/signup` [post]
    - `/users` [get]
    - `/users` [patch]
    - `/users/{id}` [get]
    - `/users/{id}` [delete]
-2. Thread
+3. Thread
    - `/threads` [get]
    - `/threads` [post]
    - `/threads` [patch]
    - `/threads/{id}` [get]
    - `/threads/{id}` [delete]
-3. Post
+4. Post
    - `/posts` [get]
    - `/posts` [post]
    - `/posts` [patch]
@@ -128,10 +126,10 @@ More details of the API endpoint you could see in the swagger docs, but here are
 
 1. Go, here I'm using v1.13
 2. PostgreSQL
-3. Linux OS (optional), recommended using Ubuntu-based distros since I'm using it.
+3. Linux OS (optional), recommended using Ubuntu-based distros since I'm using it (Ubuntu 20.04).
 4. Docker (optional), if you want to containerize the app and the db 
 5. Postman (optional), to use or test the API with forging requests  directly, and could be used to open [postman_collection.json](docs/forum_api.postman_collection.json) that include request sample of every endpoints.
-6. Browser (optional), This needed to see swaggerui static file from the fileserver.
+6. Browser (optional), such as Firefox or Chrome, which is needed to see swaggerui static file from the fileserver.
 
 ## Go Library/Module Used
 
@@ -157,7 +155,11 @@ For run the API for the first time, make sure to do these steps:
       sh init_db.sh
    ```
 
-2. Install every Go library listed in `go.mod` or `glide.yaml` file if you're using and familiar with glide.
+2. Install every Go library listed in `go.mod` with below command
+   ```
+      go mod tidy
+   ```
+   or from `glide.yaml` file if you're using and familiar with glide.
 3. Set the environment variable in the `.env` file to the value that approriate.
 4. Migrate the models to the DB and try to seed the data if you think It's needed.
 
@@ -179,8 +181,11 @@ Running the application is just run the `main.go` in the root of the project bas
       go run main.go -- seed
    ```
 
-Or you could try to build the projct first and then try to execute it with corresponding schema that written above.
-
+Or you could try to build the projct first and then try to execute it with corresponding schema that written above. For example you could run this command below
+```
+   go build -o main
+   ./main   # or ./main -- test or ./main -- migrate
+```
 
 ## How to Test
 
