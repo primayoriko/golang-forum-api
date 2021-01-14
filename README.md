@@ -1,30 +1,33 @@
 # Golang Forum API
 
+## Description
+
+-------
 API that already provide basic features of the forum web application and implemented in Golang language. This project is sample of production ready API that already has JWT auth system, logger, test, and also openAPI/swagger docs.
 
 ## Project Structure
 
 -------
-Here is summary folder structure in the project and It's short description
-- **api** : Related to source code of the API itself
-  - **auth** :
-  - **controllers** :
-  - **database** :
-  - **logger** :
-  - **middlewares** :
-  - **models** :
-  - **routers** :
-  - **utils** :
-  - <b>*server.go*</b> : go code that become gateway (startup) of the API 
-- **docs** : Related to the documentation of the project, especially of the API
-  - **assets** :
-  - **swaggerui** :
-- **logs** : Contains the log of the 
-- **migrations** : Contains file (go source code) that needed to migrate model to the DB
-- **seeders** :
-- <b>*main.go*</b> : go code that become gateway of the project application
-- <b>*.env*</b> :
-- <b>* *.sh*</b> :
+Here is summary general structure (folder and important files) in the project and It's short description, where structure separation itself is mainly based on It's context and functionality.
+- **api**: Stuff that related to source code of the API itself
+  - **auth**: Stuff that specifically related to auth system
+  - **controllers**: Functions that handling request as the end/terminal handler, so function here is main judge to giving response of the request.
+  - **database**: Stuff that related to interact with DB 
+  - **logger**: Stuff that related to writing log of the API
+  - **middlewares**: Functions that placed as an intermediate component that passed by the request and response
+  - **models**: Structure that used as the DB table's schema representation in Go, and also being model for request-response format and It's corresponding casting function/method
+  - **routers**: Function that define endpoint path and It's pipeline or route or function chain that become request-response way
+  - **utils**: Helper function to help implement other functionalities faster, easier, and less redundant
+  - <b>*server.go*</b>: Go code that become gateway (startup) of the API 
+- **docs**: Related to the documentation of the project, especially of the API
+  - **assets**: Static file that being served as the content of the docs (such as images, etc)
+  - **swaggerui**: Satic file that specifically for the file server of the swagger docs
+- **logs**: Log file(s) of the API
+- **migrations**: Go source code that needed to migrate model/schema to the DB
+- **seeders**: Go source code that needed to seed/insert data/record to the DB
+- <b>*main.go*</b>: Go code that become gateway of the project application
+- <b>*.env*</b>: Environment variable that used to run this app
+- <b>* *.sh*</b>: Shell console code that highly needed and packed to help operation of the project
   
 <!-- ```
 root
@@ -134,16 +137,62 @@ More details of the API endpoint you could see in the swagger docs, but here are
 
 -------
 
-1. 
+1. `gorm.io/gorm` as Object Relational Mapping (ORM) library that I used in this project to access database, and `gorm.io/driver/postgres` as the mandatory driver that ORM need to access Postgre DB.
+2. `github.com/gorilla/mux` as routing helper, and `github.com/gorilla/context` as helper to passing data through the middleware.
+3. `github.com/sirupsen/logrus` as main library to help logging the API and `github.com/rifflock/lfshook` as hook library to write file to the file.
+4. `github.com/asaskevich/govalidator` as helper library to help validate input.
+5. `github.com/mikunalpha/goas` as helper to make swagger spec from the comments in the source code.
+6. `github.com/joho/godotenv` to help fetch environment var from a file.
+7. `github.com/dgrijalva/jwt-go` library that needed to make JWT-based auth.
+8. `github.com/go-errors/errors` helps to checking or handling things that related to error type.
+
 
 ## How to Install 
 
 -------
+For run the API for the first time, make sure to do these steps:
+
+1. Prepare application that needed, minimum Go and Postgres. You could use dockerized version API from create the docker image with the `Dockerfile`, and also create PostgreSQL instance in docker container with command in `init_db.sh`, or simply you could just run in terminal
+   ```
+      sh init_db.sh
+   ```
+
+2. Install every Go library listed in `go.mod` or `glide.yaml` file if you're using and familiar with glide.
+3. Set the environment variable in the `.env` file to the value that approriate.
+4. Migrate the models to the DB and try to seed the data if you think It's needed.
 
 ## How to Run
 
 -------
+Running the application is just run the `main.go` in the root of the project based on main function of the app that you want to use
+
+1. API
+   ```
+      go run main.go
+   ```
+2. Migrate model
+   ```
+      go run main.go -- migrate
+   ```
+3. Seed Data 
+   ```
+      go run main.go -- seed
+   ```
+
+Or you could try to build the projct first and then try to execute it with corresponding schema that written above.
+
+
+## How to Test
+
+-------
+To test the application just run code in the `run_tests.sh`, or simply you could just run in terminal
+```
+   sh run_tests.sh
+```
+And see if there is any fail on it.
 
 ## Issues
 
 -------
+
+1. Still can't log GORM query into a file.
