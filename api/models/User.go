@@ -98,3 +98,7 @@ func (ur *UserResponse) InsertFromModel(user User) error {
 	ur.CreatedAt = user.CreatedAt
 	return nil
 }
+
+// type UsersResponse struct {
+// 	Data []User `json:"users" example:"[{\"id\":100, \"name\":\"Mikun\"}]" description:"User identity"`
+// }

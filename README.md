@@ -156,7 +156,9 @@ Authentication schema used is by using Bearer token that specified in Authorizat
 -------
 For run the API for the first time, make sure to do these steps:
 
-1. Prepare application that needed, minimum Go and PostgreSQL. You could use dockerized version API from create the docker image with the `Dockerfile`, and also create PostgreSQL instance in docker container with command in `init_db.sh`, or simply you could just run in terminal
+1. Set the environment variable in the `.env` file to the value that approriate (like for the port/name it should be not used). On later command, please set the corresponding value to make it consistent.
+2. Prepare application that needed, minimum Go and PostgreSQL. 
+You also could use dockerized version API from create the docker image with the `Dockerfile`, and the PostgreSQL's instance in a docker container with command in `init_db.sh`, or simply you could just run in terminal
    ```
       sh init_db.sh
    ```
@@ -166,19 +168,18 @@ For run the API for the first time, make sure to do these steps:
       sudo docker container run -d --name=pg-forum -p 5400:5432 -e POSTGRES_PASSWORD=postgres -e PGDATA=/pgdata_docker -v /pgdata_docker:/pgdata_docker postgres # This will map port 5400 host to postgres port (5432)
       PGPASSWORD='postgres' psql -h localhost -p 5400 -U postgres -c "create database forum_db"
    ```
-2. Install every Go library listed in `go.mod` with below command
+3. Install every Go library listed in `go.mod` with below command
    ```
       go mod tidy
    ```
    or from `glide.yaml` file if you're using and familiar with glide.
-3. Set the environment variable in the `.env` file to the value that approriate.
-4. Migrate the models to the DB and try to seed the data if you think It's needed.
+4. Before start the API, It's mandatory to migrate the models, and you could seed the data if It's needed (will be explained later).
 
-Alternatively, you could do step 1-2 with docker compose by executing command below
+Alternatively, you could do step 2-3 with docker compose by executing command below
 ```
    docker-compose up
 ```
-This command will run the spec in `docker-compose.yaml`.
+This command will run the spec in `docker-compose.yml`.
 
 ## How to Run
 
