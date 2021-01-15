@@ -436,7 +436,10 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var userRes models.UserResponse
+	userRes.InsertFromModel(user)
+
 	utils.JSONResponseWriter(&w, http.StatusOK,
-		user, nil)
+		userRes, nil)
 	return
 }

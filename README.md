@@ -27,7 +27,7 @@ Here is summary general structure (folder and important files) in the project an
 - **seeders**: Go source code that needed to seed/insert data/record to the DB
 - ***main.go***: Go code that become gateway of the project application
 - ***.env***: Environment variable that used to run this app
-- *** *.sh***: Shell console code that highly needed and packed to help operation of the project
+- ****.sh***: Shell console code that highly needed and packed to help operation of the project
   
 <!-- ```
 root
@@ -101,24 +101,30 @@ And the relations basically are
 More details of the API endpoint you could see in the swagger docs, but here are summary of the available endpoints:
 1. **SwaggerUI Docs** in `/docs/` [get]
 2. **User**
-   - `/signin` [post]
-   - `/signup` [post]
-   - `/users` [get]
-   - `/users` [patch]
-   - `/users/{id}` [get]
-   - `/users/{id}` [delete]
+   - `/signin` [post] -> DTO reqBody: **Credentials**, resBody: **Claims**
+   - `/signup` [post] -> DTO reqBody: **RegistrationRequest**
+   - `/users` [get] -> queries: **maxid**, **minid**, **username**, **page**, **pagesize**, DTO resBody: (array of) **UserResponse**
+   - `/users` [patch] -> DTO reqBody: : **UserUpdateRequest**
+   - `/users/{id}` [get] -> DTO resBody: **UserResponse**
+   - `/users/{id}` [delete] -> DTO resBody: **UserResponse**
 3. **Thread**
-   - `/threads` [get]
-   - `/threads` [post]
-   - `/threads` [patch]
-   - `/threads/{id}` [get]
-   - `/threads/{id}` [delete]
+   - `/threads` [get] -> queries: **title**, **topic**, **userid**, **username**, **page**, **pagesize**, DTO resBody: (array of) **Thread**
+   - `/threads` [post] -> DTO reqBody: **ThreadCreateRequest**
+   - `/threads` [patch] -> DTO reqBody: **ThreadUpdateRequest**
+   - `/threads/{id}` [get] -> DTO resBody: **Thread**
+   - `/threads/{id}` [delete] -> DTO resBody: **Thread**
 4. ***Post***
-   - `/posts` [get]
-   - `/posts` [post]
-   - `/posts` [patch]
-   - `/posts/{id}` [delete]
+   - `/posts` [get] -> queries: **content**, **userid**, **username**, **page**, **pagesize**, DTO resBody: (array of) **Post**
+   - `/posts` [post] -> DTO reqBody: **PostCreateRequest**
+   - `/posts` [patch] -> DTO reqBody: **PostUpdateRequest**
+   - `/posts/{id}` [delete] -> -> DTO resBody: **Post**
 
+Authentication schema used is by using Bearer token that specified in Authorization header and has format
+```
+   {Header Key}      {Header body}
+   Authorization     Bearer <your_token>
+   Authorization     Bearer <header>.<body>.<signature>
+```
 
 ## Application Dependency
 
@@ -154,7 +160,12 @@ For run the API for the first time, make sure to do these steps:
    ```
       sh init_db.sh
    ```
-
+   Or you could use this command directly to be executed
+   ```
+      sudo docker pull postgres
+      sudo docker container run -d --name=pg-forum -p 5400:5432 -e POSTGRES_PASSWORD=postgres -e PGDATA=/pgdata_docker -v /pgdata_docker:/pgdata_docker postgres # This will map port 5400 host to postgres port (5432)
+      PGPASSWORD='postgres' psql -h localhost -p 5400 -U postgres -c "create database forum_db"
+   ```
 2. Install every Go library listed in `go.mod` with below command
    ```
       go mod tidy
@@ -193,6 +204,20 @@ Or you could try to build the projct first and then try to execute it with corre
 To test the application just run code in the `run_tests.sh`, or simply you could just run in terminal
 ```
    sh run_tests.sh
+```
+Or you could try to execute the command manually
+```
+   go run main.go -- seed
+   go test -v ./api/controllers/post_test.go
+   go test -v ./api/controllers/thread_test.go
+   go test -v ./api/controllers/user_test.go
+   go run main.go -- seed  # or go run main.go -- migrate
+```
+In case you add other test and want to run them all you could execute this instead
+```
+   go run main.go -- seed
+   go test -v ./... -count 1 -p 1 # The flag is used to make the test run single-threadedly
+   go run main.go -- seed  # or go run main.go -- migrate
 ```
 And see if there is any fail on it.
 
