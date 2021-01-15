@@ -98,12 +98,14 @@ func GetThreads(w http.ResponseWriter, r *http.Request) {
 		err = db.Model(&models.Thread{}).
 			Where("(creator_id = ? OR creator_id = ? OR topic =  ?) AND title LIKE ?",
 				userID, user.ID, topic, title).
+			Order("created_at desc").
 			Offset(offset).
 			Limit(pageSize).
 			Find(&threads).Error
 	} else {
 		err = db.Model(&models.Thread{}).
 			Where("title LIKE ?", title).
+			Order("created_at desc").
 			Offset(offset).
 			Limit(pageSize).
 			Find(&threads).Error
@@ -142,8 +144,6 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.ParseUint(idStr, 10, 64)
 
-	// fmt.Printf("%s %d", idStr, id)
-
 	db, err := database.ConnectDB()
 	if err != nil || db == nil {
 		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
@@ -152,12 +152,9 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var thread models.Thread
-	// db.Preload("posts").
-	// 	Where("id = ?", id).
-	// 	First(&thread)
-	err = db.Where("id = ?", id).First(&thread).Error
-
-	if err != nil {
+	var posts []models.Post
+	// db.Preload("posts").Where("id = ?", id).First(&thread)
+	if err := db.Where("id = ?", id).First(&thread).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			utils.JSONResponseWriter(&w, http.StatusNotFound,
 				*(models.NewErrorResponse("can't find specified thread")), nil)
@@ -168,6 +165,15 @@ func GetThread(w http.ResponseWriter, r *http.Request) {
 			*(models.NewErrorResponse(err.Error())), nil)
 		return
 	}
+
+	if err := db.Where("thread_id = ?", id).Order("updated_at desc").Limit(10).
+		Find(&posts).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		utils.JSONResponseWriter(&w, http.StatusInternalServerError,
+			*(models.NewErrorResponse(err.Error())), nil)
+		return
+	}
+
+	thread.Posts = posts
 
 	utils.JSONResponseWriter(&w, http.StatusOK,
 		thread, nil)

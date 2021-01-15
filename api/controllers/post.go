@@ -99,12 +99,14 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		err = db.Model(&models.Post{}).
 			Where("(author_id = ? OR author_id = ? OR thread_id = ?) AND content LIKE ?",
 				userID, user.ID, threadID, content).
+			Order("created_at desc").
 			Offset(offset).
 			Limit(pageSize).
 			Find(&posts).Error
 	} else {
 		err = db.Model(&models.Post{}).
 			Where("content LIKE ?", content).
+			Order("created_at desc").
 			Offset(offset).
 			Limit(pageSize).
 			Find(&posts).Error
