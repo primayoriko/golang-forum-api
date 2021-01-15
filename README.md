@@ -178,6 +178,7 @@ Alternatively, you could do step 1-2 with docker compose by executing command be
 ```
    docker-compose up
 ```
+This command will run the spec in `docker-compose.yaml`.
 
 ## How to Run
 
