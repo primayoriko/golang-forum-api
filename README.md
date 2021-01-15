@@ -72,16 +72,16 @@ Here is the details of model's schema that used in the DB
    - Title: string -> title: varchar(255) not null
    - Topic: string -> topic: varchar(255) not null
    - CreatorID: uint32 -> creator_id: bigint
-   - Creator: *User
-   - Posts: []*Post
+   - Creator: User
+   - Posts: []Post
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
 3. **Post** -> ***posts***
    - ID: serial, uint64
    - AuthorID: uint64 -> author_id: bigint
-   - Author: *User
+   - Author: User
    - ThreadID: uint64 -> thread_id: bigint
-   - Thread: *Thread
+   - Thread: Thread
    - Content: string -> topic: teet not null
    - CreatedAt: time.Time -> created_at: timestamp
    - UpdatedAt: time.Time -> updated_at: timestamp
@@ -173,6 +173,11 @@ For run the API for the first time, make sure to do these steps:
    or from `glide.yaml` file if you're using and familiar with glide.
 3. Set the environment variable in the `.env` file to the value that approriate.
 4. Migrate the models to the DB and try to seed the data if you think It's needed.
+
+Alternatively, you could do step 1-2 with docker compose by executing command below
+```
+   docker-compose up
+```
 
 ## How to Run
 

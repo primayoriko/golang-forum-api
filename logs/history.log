@@ -173,3 +173,9 @@
 {"id":0,"level":"info","method":"GET","msg":"OK\r\n","path":"/users/1","status_code":200,"time":"2021-01-14T23:14:49+07:00","username":"naufal"}
 {"id":0,"level":"info","method":"GET","msg":"OK","path":"/users/1","status_code":200,"time":"2021-01-14T23:16:53+07:00","username":"naufal"}
 {"id":1,"level":"error","method":"GET","msg":"Not Found","path":"/threads/14","status_code":404,"time":"2021-01-14T23:17:02+07:00","username":"naufal"}
+{"id":1,"level":"error","method":"GET","msg":"Internal Server Error","path":"/threads/1","status_code":500,"time":"2021-01-15T08:13:12+07:00","username":"naufal"}
+{"id":1,"level":"error","method":"GET","msg":"Internal Server Error","path":"/threads/1","status_code":500,"time":"2021-01-15T08:13:59+07:00","username":"naufal"}
+{"id":1,"level":"info","method":"GET","msg":"OK","path":"/threads/1","status_code":200,"time":"2021-01-15T08:15:10+07:00","username":"naufal"}
+{"id":1,"level":"info","method":"GET","msg":"OK","path":"/threads/2","status_code":200,"time":"2021-01-15T08:15:23+07:00","username":"naufal"}
+{"id":1,"level":"info","method":"GET","msg":"OK","path":"/threads/3","status_code":200,"time":"2021-01-15T08:15:36+07:00","username":"naufal"}
+{"id":1,"level":"info","method":"GET","msg":"OK","path":"/threads?userid=2\u0026pagesize=0","status_code":200,"time":"2021-01-15T08:17:40+07:00","username":"naufal"}
