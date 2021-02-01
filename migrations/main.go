@@ -3,8 +3,8 @@ package migrations
 import (
 	"fmt"
 
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/api/models"
+	"github.com/primayoriko/golang-forum-api/api/database"
+	"github.com/primayoriko/golang-forum-api/api/models"
 )
 
 // DropTables used to specified tables that exist in the database

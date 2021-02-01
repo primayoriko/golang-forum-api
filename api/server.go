@@ -10,8 +10,8 @@ import (
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 
-	"gitlab.com/hydra/forum-api/api/logger"
-	"gitlab.com/hydra/forum-api/api/routers"
+	"github.com/primayoriko/golang-forum-api/api/logger"
+	"github.com/primayoriko/golang-forum-api/api/routers"
 )
 
 // Run would start server for the api

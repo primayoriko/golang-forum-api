@@ -4,9 +4,9 @@ import (
 	// "github.com/hydra/forum-api/api/controllers"
 
 	"github.com/gorilla/mux"
-	"gitlab.com/hydra/forum-api/api/controllers"
-	"gitlab.com/hydra/forum-api/api/middlewares"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/controllers"
+	"github.com/primayoriko/golang-forum-api/api/middlewares"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // AddUserRoutes is function to add subroute for auth and /users prefixes path

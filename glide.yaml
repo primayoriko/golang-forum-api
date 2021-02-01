@@ -1,4 +1,4 @@
-package: gitlab.com/hydra/forum-api
+package: github.com/primayoriko/golang-forum-api
 import:
 - package: github.com/PaesslerAG/gval
 - package: github.com/asaskevich/govalidator

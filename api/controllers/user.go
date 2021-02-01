@@ -13,10 +13,10 @@ import (
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 
-	"gitlab.com/hydra/forum-api/api/auth"
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/api/models"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/auth"
+	"github.com/primayoriko/golang-forum-api/api/database"
+	"github.com/primayoriko/golang-forum-api/api/models"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // SignUp is function for create new User
@@ -81,7 +81,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 // SignIn is method for get token for creds/auth
 // @Title Sign In.
-// @Description Login with JSON-formatted request body.
+// @Description Sign in with JSON-formatted request body.
 // @Param  post  body  auth.Credentials  true  "auth.Credentials"
 // @Success  200  object  auth.Claims   "auth.Claims"
 // @Failure  400  object  models.ErrorResponse  "ErrorResponse JSON"

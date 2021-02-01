@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // Thread is model for threads table in the db

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	validator "github.com/asaskevich/govalidator"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // User is model for users table in the db

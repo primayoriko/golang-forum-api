@@ -7,9 +7,9 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/context"
-	"gitlab.com/hydra/forum-api/api/auth"
-	"gitlab.com/hydra/forum-api/api/models"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/auth"
+	"github.com/primayoriko/golang-forum-api/api/models"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // CheckJWT is a method for checking jwt token and passing the creds

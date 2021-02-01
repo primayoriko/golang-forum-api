@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/context"
-	"gitlab.com/hydra/forum-api/api/logger"
+	"github.com/primayoriko/golang-forum-api/api/logger"
 )
 
 // Log is a middleware method for writing log for every passed request

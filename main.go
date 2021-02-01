@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"gitlab.com/hydra/forum-api/api"
-	"gitlab.com/hydra/forum-api/migrations"
-	"gitlab.com/hydra/forum-api/seeders"
+	"github.com/primayoriko/golang-forum-api/api"
+	"github.com/primayoriko/golang-forum-api/migrations"
+	"github.com/primayoriko/golang-forum-api/seeders"
 )
 
 func main() {

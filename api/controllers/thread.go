@@ -11,9 +11,9 @@ import (
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/api/models"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/database"
+	"github.com/primayoriko/golang-forum-api/api/models"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 // GetThreads will fetch all threads list of specific criteria

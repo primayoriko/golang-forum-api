@@ -12,9 +12,9 @@ import (
 	"github.com/steinfletcher/apitest"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
 
-	"gitlab.com/hydra/forum-api/api/controllers"
-	"gitlab.com/hydra/forum-api/api/middlewares"
-	"gitlab.com/hydra/forum-api/api/utils"
+	"github.com/primayoriko/golang-forum-api/api/controllers"
+	"github.com/primayoriko/golang-forum-api/api/middlewares"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 )
 
 func Test_GetUsers(t *testing.T) {
@@ -226,7 +226,7 @@ func Test_SignUp(t *testing.T) {
 	})
 }
 
-func Test_Login(t *testing.T) {
+func Test_Signin(t *testing.T) {
 	if err := godotenv.Load("../../.env"); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}

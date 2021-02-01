@@ -1,7 +1,7 @@
 package seeders
 
 import (
-	"gitlab.com/hydra/forum-api/api/models"
+	"github.com/primayoriko/golang-forum-api/api/models"
 	"gorm.io/gorm"
 )
 

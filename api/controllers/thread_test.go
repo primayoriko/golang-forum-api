@@ -9,11 +9,11 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/primayoriko/golang-forum-api/api/controllers"
+	"github.com/primayoriko/golang-forum-api/api/middlewares"
+	"github.com/primayoriko/golang-forum-api/api/utils"
 	"github.com/steinfletcher/apitest"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
-	"gitlab.com/hydra/forum-api/api/controllers"
-	"gitlab.com/hydra/forum-api/api/middlewares"
-	"gitlab.com/hydra/forum-api/api/utils"
 )
 
 func Test_GetThreads(t *testing.T) {

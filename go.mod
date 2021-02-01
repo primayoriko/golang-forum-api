@@ -1,4 +1,4 @@
-module gitlab.com/hydra/forum-api
+module github.com/primayoriko/golang-forum-api
 
 go 1.13
 

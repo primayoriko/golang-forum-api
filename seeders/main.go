@@ -5,8 +5,8 @@ import (
 
 	"gorm.io/gorm"
 
-	"gitlab.com/hydra/forum-api/api/database"
-	"gitlab.com/hydra/forum-api/migrations"
+	"github.com/primayoriko/golang-forum-api/api/database"
+	"github.com/primayoriko/golang-forum-api/migrations"
 )
 
 // SeedData is function to seed all tables data to database

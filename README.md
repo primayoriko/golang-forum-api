@@ -156,7 +156,8 @@ Authentication schema used is by using Bearer token that specified in Authorizat
 -------
 For run the API for the first time, make sure to do these steps:
 
-1. Set the environment variable in the `.env` file to the value that approriate (like for the port/name it should be not used). On later command, please set the corresponding value to make it consistent.
+1. Set the environment variable in the `.env` file to the value that approriate (like for the port/name it should be not used). 
+On later command, please set the corresponding value to make it consistent.
 2. Prepare application that needed, minimum Go and PostgreSQL. 
 You also could use dockerized version API from create the docker image with the `Dockerfile`, and the PostgreSQL's instance in a docker container with command in `init_db.sh`, or simply you could just run in terminal
    ```
